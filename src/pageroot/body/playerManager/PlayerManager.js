@@ -73,7 +73,7 @@ class PlayerManager extends HTMLDivElement {
             let songScore = this.currentCumulative[songIndex][1] - (songIndex > 0 ? this.currentCumulative[songIndex - 1][1] : 0);
 
             let ugh = this.currentCumulative.map((el) => { return Array.from(el) });
-            console.log(ugh);
+//             console.log(ugh);
 
             this.currentCumulative.splice(songIndex, 1);
 
@@ -85,10 +85,10 @@ class PlayerManager extends HTMLDivElement {
                 this.computeCumulativeScore();
             }
 
-            console.log(randSongVal);
-            console.log(songIndex);
-            console.log(this.currentCumulative);
-            console.log(this.playlist);
+//             console.log(randSongVal);
+//             console.log(songIndex);
+//             console.log(this.currentCumulative);
+//             console.log(this.playlist);
 
             let matchSongTitle = (song) => {
                 return song.songTitle == songTitle;
@@ -192,36 +192,43 @@ class PlayerManager extends HTMLDivElement {
 
     async getFilesCallback(event) {
         let audioFiles = Array.from(event.target.files).filter(file => file.type.startsWith('audio'));
+        let songsNo  = audioFiles.length;
+        let currentChunk = 0;
+        this.playlist = [];
 
-        this.playlist = await Promise.all(audioFiles.map(
-            async (audio) => {
+        do{
+            let currentMax = currentChunk + 50;
+            let audioFilesSlice = audioFiles.slice(currentChunk, currentMax+1);
+
+            let playlistSlice = await Promise.all(audioFilesSlice.map(
+                async (audio) => {
                 let header = audio.slice(0, 10);
 
                 return header.arrayBuffer().then((buf) => {
                     let size = new DataView(buf).getUint32(6);
-                    return audio.slice(0, 1048576).arrayBuffer();
-                    //return audio.slice(0, size + 10).arrayBuffer();
+                    //return audio.slice(0, 1048576).arrayBuffer();
+                    return audio.slice(0, size + 10).arrayBuffer();
                 }).then((tagBuf) => {
-                    try {
-                        let tag = ID3.Parse(tagBuf, false, 2);
-                        let framesDict = {};
+                    let tag = ID3.Parse(tagBuf, false, 2);
+                    let framesDict = {};
 
-                        tag.Frames.forEach((frame, i) => {
-                            framesDict[frame.ID] = frame;
-                        });
+                    tag.Frames.forEach((frame, i) => {
+                        framesDict[frame.ID] = frame;
+                    });
 
-                        tag.Frames = framesDict;
-                        return { file: audio, tag: tag };
-
-                    } catch (e) {
-                        console.log(e);
-                        debugger;
-                    }
-
+                    tag.Frames = framesDict;
+                    return { file: audio, tag: tag };
                 });
-            }
-        )
-        );
+                }
+            )
+            );
+
+            this.playlist = this.playlist.concat(playlistSlice);
+
+            currentChunk += 50;
+        }while(currentChunk < songsNo )
+
+
 
         this.playlist = this.songListContainer.addSongs(this.playlist);
 
