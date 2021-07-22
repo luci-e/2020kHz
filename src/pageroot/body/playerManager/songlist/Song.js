@@ -3,6 +3,7 @@ class Song extends HTMLDivElement {
     file;
     tag;
     songTitle;
+    songArtist;
 
     constructor() {
         super();
@@ -11,30 +12,31 @@ class Song extends HTMLDivElement {
     connectedCallback() {
         this.attachShadow({ mode: 'open' });
         this.shadowRoot.append(this.songTemplate.content.cloneNode(true));
+        
+        let songName = document.createElement("span")
+        songName.slot = 'songName';
+        songName.innerText = this.songTitle;
+        this.appendChild(songName);
 
+
+        let songArtist = document.createElement("span")
+        songArtist.slot = 'songArtist';
+        songArtist.innerText = this.songArtist;
+        this.appendChild(songArtist);
+    }
+
+    init(){
         const formatter = {
             TIT2: (titleData) => {
-                let songName = document.createElement("span")
-                songName.slot = 'songName';
-                songName.innerText = titleData.Data;
                 this.songTitle = titleData.Data;
-                this.appendChild(songName);
             },
 
             TPE1: (artistData) => {
-                let songArtist = document.createElement("span")
-                songArtist.slot = 'songArtist';
-                songArtist.innerText = artistData.Data;
-                this.appendChild(songArtist);
+                this.songArtist = artistData.Data;
             },
 
             NODATADEFAULT: (fileName) => {
-                let songName = document.createElement("span")
-                songName.slot = 'songName';
-                songName.innerText = fileName;
                 this.songTitle = fileName;
-
-                this.appendChild(songName);
             }
         }
 

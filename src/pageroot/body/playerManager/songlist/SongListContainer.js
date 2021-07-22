@@ -32,16 +32,29 @@ class SongListContainer extends ScrollableList {
             let song = document.createElement("div", { is: 'song-item' });
             song.file = songObj.file;
             song.tag = songObj.tag;
+            song.init();
 
             song.setAttribute('is', 'song-item');
             song.slot = "element";
             song.setAttribute(i % 2 == 0 ? "even" : "odd", '');
 
             songList.push(song);
-            this.appendChild(song);
             i++;
         }
 
+        songList = songList.sort( (first, second) =>{
+            let titleCompare = first.songArtist.localeCompare(second.songArtist);
+
+            if (titleCompare == 0){
+                return first.songTitle.localeCompare(second.songTitle);
+            }
+            
+            return titleCompare;
+        });
+
+        //console.log(songList);
+
+        songList.forEach( song => this.appendChild(song));
         return songList;
     }
 }

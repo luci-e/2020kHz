@@ -232,7 +232,7 @@ class PlayerManager extends HTMLDivElement {
 
         this.playlist = this.songListContainer.addSongs(this.playlist);
 
-        console.dir(this);
+//         console.dir(this);
     }
 }
 
