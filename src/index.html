@@ -129,6 +129,27 @@
 
     <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
 
+    <script>
+      if ('serviceWorker' in navigator) {
+        console.log('Registering service worker');
+        navigator.serviceWorker.register('./cache-worker.js', {scope: './'}).then(function() {
+          // Registration was successful. Now, check to see whether the service worker is controlling the page.
+          if (navigator.serviceWorker.controller) {
+            // If .controller is set, then this page is being actively controlled by the service worker.
+            console.log('Service worker is active');
+          } else {
+            // If .controller isn't set, then prompt the user to reload the page so that the service worker can take
+            // control. Until that happens, the service worker's fetch handler won't be used.
+            console.log('Reload the page');
+          }
+        }).catch(function(error) {
+          // Something went wrong during registration. The service-worker.js file
+          // might be unavailable or contain a syntax error.
+          console.error('Something went wrong during registration');
+        });
+      }
+    </script>
+
     <script src="./modules/misc/ID3.js" charset="utf-8"></script>
     <script src="./modules/misc/PapaParse-5.0.2/papaparse.min.js" charset="utf-8"></script>
 
