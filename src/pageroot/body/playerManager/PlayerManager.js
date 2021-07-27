@@ -24,7 +24,7 @@ class PlayerManager extends HTMLDivElement {
 
 
 
-            this.songListContainer = document.getElementById('songlist');
+            this.songListContainer = document.getElementById('songList');
             this.player = document.getElementById('player');
         });
 

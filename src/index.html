@@ -31,7 +31,7 @@
     <template id="scrollableListTemplate">
         <style>
             :host {
-                height: 440px;
+                height: 100%;
                 width: 100%;
                 border: 1px solid black;
                 box-sizing: border-box;
@@ -81,8 +81,8 @@
     <template id="playerTemplate">
         <style>
             :host {
-                height: 500px;
-                width: 400px;
+                height: 100%;
+                width: 100%;
                 box-sizing: border-box;
                 border: 1px solid;
                 display: flex;
@@ -90,7 +90,8 @@
                 flex-wrap: nowrap;
                 align-items: center;
                 overflow: hidden;
-                justify-content: space-around;
+                justify-content: space-between;
+                padding: 10px;
             }
 
             ::slotted(#playingSongImage) {
@@ -98,7 +99,7 @@
             }
 
             ::slotted(#playingSong) {
-                width: 250px;
+                width: 100%;
             }
 
             #audioControls {
@@ -108,6 +109,7 @@
                 justify-content: space-around;
                 box-sizing: border-box;
                 align-items: center;
+                flex-wrap:wrap;
             }
         </style>
 
@@ -120,8 +122,8 @@
         </div>
 
         <div id='audioControls'>
-            <slot name='previousTrack'></slot>
             <slot name='playingSong'></slot>
+            <slot name='previousTrack'></slot>
             <slot name='nextTrack'></slot>
         </div>
 
@@ -155,8 +157,8 @@
     <script src="./modules/misc/PapaParse-5.0.2/papaparse.min.js" charset="utf-8"></script>
 
     <script src="./modules/misc/ScrollableList.js" charset="utf-8"></script>
-    <script src="./pageroot/body/playerManager/songlist/SongListContainer.js" charset="utf-8"></script>
-    <script src="./pageroot/body/playerManager/songlist/Song.js" charset="utf-8"></script>
+    <script src="./pageroot/body/playerManager/leftPanel/songlist/SongListContainer.js" charset="utf-8"></script>
+    <script src="./pageroot/body/playerManager/leftPanel/songlist/Song.js" charset="utf-8"></script>
     <script src="./pageroot/body/playerManager/PlayerManager.js" charset="utf-8"></script>
     <script src="./pageroot/body/playerManager/player/Player.js" charset="utf-8"></script>
 
@@ -206,6 +208,12 @@
             box-sizing: border-box;
             width: 300px;
             height: 500px;
+            /* padding-top: 10px; */
+        }
+
+        #songList{
+            flex: 1;
+            width: 100%;
         }
 
         #controlBar {
@@ -219,8 +227,27 @@
             border: 1px solid black;
         }
 
+        #player{
+            height: 500px;
+            width: 400px;
+        }
+
+        @media (max-height: 500px){
+            #playerManager {
+                height: 90%;
+            }
+
+            #leftPanel {
+                height: 100%;
+            }
+
+            #player{
+                height: 100%;
+            }
+        }
+
         #uploadFilesButton {
-            background-image: url(./pageroot/folder.png);
+            background-image: url(./pageroot/body/playerManager/leftPanel/controlBar/folder.png);
         }
 
         #uploadFilesButton::file-selector-button {
@@ -230,19 +257,19 @@
         #modeSwitchButton {}
 
         .sequential {
-            background-image: url(./pageroot/arrow-right.png);
+            background-image: url(./pageroot/body/playerManager/leftPanel/controlBar/arrow-right.png);
         }
 
         .shuffle {
-            background-image: url(./pageroot/shuffle.png);
+            background-image: url(./pageroot/body/playerManager/leftPanel/controlBar/shuffle.png);
         }
 
         .fairshuffle {
-            background-image: url(./pageroot/dice.png);
+            background-image: url(./pageroot/body/playerManager/leftPanel/controlBar/dice.png);
         }
 
         #uploadProbsButton {
-            background-image: url(./pageroot/curve.png);
+            background-image: url(./pageroot/body/playerManager/leftPanel/controlBar/curve.png);
         }
 
         #uploadProbsButton::file-selector-button {
@@ -250,11 +277,11 @@
         }
 
         #previousTrackButton {
-            background-image: url(./pageroot/back.png);
+            background-image: url(./pageroot/body/playerManager/player/back.png);
         }
 
         #nextTrackButton {
-            background-image: url(./pageroot/next.png);
+            background-image: url(./pageroot/body/playerManager/player/next.png);
         }
     </style>
 
@@ -266,7 +293,7 @@
 
     <div id='playerManager' is='player-manager'>
         <div id='leftPanel'>
-            <div id='songlist' is="songlist-container">
+            <div id='songList' is="songlist-container">
             </div>
 
             <div id='controlBar'>
@@ -282,8 +309,8 @@
             <span id='playingSongArtist' slot='playingSongArtist'></span>
             <span id='playingSongTitle' slot='playingSongTitle'></span>
 
-            <input type='button' class='controlButton' id='previousTrackButton' slot='previousTrack'>
             <audio id='playingSong' preload="auto" controls slot='playingSong'></audio>
+            <input type='button' class='controlButton' id='previousTrackButton' slot='previousTrack'>
             <input type='button' class='controlButton' id='nextTrackButton' slot='nextTrack'>
         </div>
 
