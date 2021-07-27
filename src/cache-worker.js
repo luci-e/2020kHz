@@ -28,13 +28,13 @@
 var cacheName = 'theCache';
 
 var urlsToCache = [
-    '/modules/misc/ID3.js',
-    '/modules/misc/PapaParse-5.0.2/papaparse.min.js',
-    '/modules/misc/ScrollableList.js',
-    '/pageroot/body/playerManager/songlist/SongListContainer.js',
-    '/pageroot/body/playerManager/songlist/Song.js',
-    '/pageroot/body/playerManager/PlayerManager.js',
-    '/pageroot/body/playerManager/player/Player.js',
+    './modules/misc/ID3.js',
+    './modules/misc/PapaParse-5.0.2/papaparse.min.js',
+    './modules/misc/ScrollableList.js',
+    './pageroot/body/playerManager/songlist/SongListContainer.js',
+    './pageroot/body/playerManager/songlist/Song.js',
+    './pageroot/body/playerManager/PlayerManager.js',
+    './pageroot/body/playerManager/player/Player.js',
     './pageroot/arrow-right.png',
     './pageroot/back.png',
     './pageroot/curve.png',
