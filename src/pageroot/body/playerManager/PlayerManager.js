@@ -14,6 +14,7 @@ class PlayerManager extends HTMLDivElement {
     constructor() {
         super();
         this.currentPlayerMode = 0;
+        this.currentSongNo = 0;
     }
 
     connectedCallback() {
@@ -44,6 +45,11 @@ class PlayerManager extends HTMLDivElement {
             e.stopPropagation();
             this.selectNextSong();
         });
+
+        if ('mediaSession' in navigator) {
+            navigator.mediaSession.setActionHandler('previoustrack', this.selectPreviousSong.bind(this));
+            navigator.mediaSession.setActionHandler('nexttrack', this.selectNextSong.bind(this));
+        }
     }
 
     sequentialNext() {
@@ -73,7 +79,7 @@ class PlayerManager extends HTMLDivElement {
             let songScore = this.currentCumulative[songIndex][1] - (songIndex > 0 ? this.currentCumulative[songIndex - 1][1] : 0);
 
             let ugh = this.currentCumulative.map((el) => { return Array.from(el) });
-//             console.log(ugh);
+            //             console.log(ugh);
 
             this.currentCumulative.splice(songIndex, 1);
 
@@ -85,10 +91,10 @@ class PlayerManager extends HTMLDivElement {
                 this.computeCumulativeScore();
             }
 
-//             console.log(randSongVal);
-//             console.log(songIndex);
-//             console.log(this.currentCumulative);
-//             console.log(this.playlist);
+            //             console.log(randSongVal);
+            //             console.log(songIndex);
+            //             console.log(this.currentCumulative);
+            //             console.log(this.playlist);
 
             let matchSongTitle = (song) => {
                 return song.songTitle == songTitle;
@@ -123,7 +129,8 @@ class PlayerManager extends HTMLDivElement {
                 break;
         }
 
-        this.player.playSong(this.playlist[this.currentSongNo]);
+        let selectedSong = this.playlist[this.currentSongNo];
+        this.playSong(selectedSong);
     }
 
     selectNextSong() {
@@ -141,7 +148,8 @@ class PlayerManager extends HTMLDivElement {
                 break;
         }
 
-        this.player.playSong(this.playlist[this.currentSongNo]);
+        let selectedSong = this.playlist[this.currentSongNo];
+        this.playSong(selectedSong);
     }
 
     cycleModeCallback() {
@@ -187,38 +195,53 @@ class PlayerManager extends HTMLDivElement {
 
     async songSelectedCallback(event) {
         this.currentSongNo = this.playlist.indexOf(event.detail.song);
-        await this.player.playSong(event.detail.song);
+        await this.playSong();
+    }
+
+    async playSong(song = this.playlist[this.currentSongNo]) {
+        await this.player.playSong(song);
+
+        if ('mediaSession' in navigator) {
+            navigator.mediaSession.metadata = new MediaMetadata({
+                title: song.songTitle,
+                artist: song.songArtist,
+                artwork: [
+                    { src: this.player.playingSongImage.src, sizes: '256x256', type: 'image/*' },
+                ]
+            });
+        }
     }
 
     async getFilesCallback(event) {
+        console.dir(event.target.files);
         let audioFiles = Array.from(event.target.files).filter(file => file.type.startsWith('audio'));
-        let songsNo  = audioFiles.length;
+        let songsNo = audioFiles.length;
         let currentChunk = 0;
         this.playlist = [];
 
-        do{
+        do {
             let currentMax = currentChunk + 50;
-            let audioFilesSlice = audioFiles.slice(currentChunk, currentMax+1);
+            let audioFilesSlice = audioFiles.slice(currentChunk, currentMax + 1);
 
             let playlistSlice = await Promise.all(audioFilesSlice.map(
                 async (audio) => {
-                let header = audio.slice(0, 10);
+                    let header = audio.slice(0, 10);
 
-                return header.arrayBuffer().then((buf) => {
-                    let size = new DataView(buf).getUint32(6);
-                    //return audio.slice(0, 1048576).arrayBuffer();
-                    return audio.slice(0, size + 10).arrayBuffer();
-                }).then((tagBuf) => {
-                    let tag = ID3.Parse(tagBuf, false, 2);
-                    let framesDict = {};
+                    return header.arrayBuffer().then((buf) => {
+                        let size = new DataView(buf).getUint32(6);
+                        //return audio.slice(0, 1048576).arrayBuffer();
+                        return audio.slice(0, size + 10).arrayBuffer();
+                    }).then((tagBuf) => {
+                        let tag = ID3.Parse(tagBuf, false, 2);
+                        let framesDict = {};
 
-                    tag.Frames.forEach((frame, i) => {
-                        framesDict[frame.ID] = frame;
+                        tag.Frames.forEach((frame, i) => {
+                            framesDict[frame.ID] = frame;
+                        });
+
+                        tag.Frames = framesDict;
+                        return { file: audio, tag: tag };
                     });
-
-                    tag.Frames = framesDict;
-                    return { file: audio, tag: tag };
-                });
                 }
             )
             );
@@ -226,13 +249,9 @@ class PlayerManager extends HTMLDivElement {
             this.playlist = this.playlist.concat(playlistSlice);
 
             currentChunk += 50;
-        }while(currentChunk < songsNo )
-
-
+        } while (currentChunk < songsNo)
 
         this.playlist = this.songListContainer.addSongs(this.playlist);
-
-//         console.dir(this);
     }
 }
 

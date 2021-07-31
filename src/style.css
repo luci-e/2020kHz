@@ -1,0 +1,120 @@
+body {
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    height: 100%;
+    width: 100%;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    background: wheat;
+    align-items: center;
+}
+
+.controlButton {
+    height: 40px;
+    width: 40px;
+    background-color: cornsilk;
+    border: 1px solid black;
+    border-radius: 20px;
+    background-size: 70% 70%;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-blend-mode: normal;
+    cursor: pointer;
+    box-shadow: -1px 1px;
+}
+
+#playerManager {
+    background: lavenderblush;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    box-sizing: border-box;
+    height: 500px;
+    width: 700px;
+    box-shadow: -3px 3px 2px 0px;
+}
+
+#leftPanel {
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+    width: 300px;
+    height: 500px;
+    /* padding-top: 10px; */
+}
+
+#songList {
+    flex: 1;
+    width: 100%;
+}
+
+#controlBar {
+    height: 60px;
+    width: 100%;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+    border: 1px solid black;
+}
+
+#player {
+    height: 500px;
+    width: 400px;
+}
+
+@media (max-height: 500px) {
+    #playerManager {
+        height: 90%;
+    }
+
+    #leftPanel {
+        height: 100%;
+    }
+
+    #player {
+        height: 100%;
+    }
+}
+
+#uploadFilesButton {
+    background-image: url(./pageroot/body/playerManager/leftPanel/controlBar/folder.png);
+}
+
+#uploadFilesButton::file-selector-button {
+    visibility: hidden;
+}
+
+#modeSwitchButton {}
+
+.sequential {
+    background-image: url(./pageroot/body/playerManager/leftPanel/controlBar/arrow-right.png);
+}
+
+.shuffle {
+    background-image: url(./pageroot/body/playerManager/leftPanel/controlBar/shuffle.png);
+}
+
+.fairshuffle {
+    background-image: url(./pageroot/body/playerManager/leftPanel/controlBar/dice.png);
+}
+
+#uploadProbsButton {
+    background-image: url(./pageroot/body/playerManager/leftPanel/controlBar/curve.png);
+}
+
+#uploadProbsButton::file-selector-button {
+    visibility: hidden;
+}
+
+#previousTrackButton {
+    background-image: url(./pageroot/body/playerManager/player/back.png);
+}
+
+#nextTrackButton {
+    background-image: url(./pageroot/body/playerManager/player/next.png);
+}
