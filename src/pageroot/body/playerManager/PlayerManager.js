@@ -91,11 +91,6 @@ class PlayerManager extends HTMLDivElement {
                 this.computeCumulativeScore();
             }
 
-            //             console.log(randSongVal);
-            //             console.log(songIndex);
-            //             console.log(this.currentCumulative);
-            //             console.log(this.playlist);
-
             let matchSongTitle = (song) => {
                 return song.songTitle == songTitle;
             }
@@ -176,6 +171,7 @@ class PlayerManager extends HTMLDivElement {
             skipEmptyLines: true,
             complete: (results) => {
                 this.probabilities = results.data;
+                event.target.style.backgroundColor = 'lightgreen';
                 this.computeCumulativeScore();
 
                 for (let [title, _] of this.probabilities) {
@@ -213,7 +209,7 @@ class PlayerManager extends HTMLDivElement {
     }
 
     async getFilesCallback(event) {
-        console.dir(event.target.files);
+        //console.dir(event.target.files);
         let audioFiles = Array.from(event.target.files).filter(file => file.type.startsWith('audio'));
         let songsNo = audioFiles.length;
         let currentChunk = 0;

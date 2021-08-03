@@ -29,6 +29,20 @@ class Player extends HTMLDivElement {
                 }
             );
 
+            this.playingSong.addEventListener('play',
+                () => {
+                    let playPauseButton = document.getElementById('playPauseButton');
+                    playPauseButton.classList.replace('playButton', 'pauseButton');
+                }
+            );
+
+            this.playingSong.addEventListener('pause',
+                () => {
+                    let playPauseButton = document.getElementById('playPauseButton');
+                    playPauseButton.classList.replace('pauseButton', 'playButton');
+                }
+            );
+
             document.getElementById('previousTrackButton').addEventListener('click',
                 (event) => {
                     event.stopPropagation();
@@ -40,6 +54,17 @@ class Player extends HTMLDivElement {
                 (event) => {
                     event.stopPropagation();
                     this.dispatchEvent(new Event('nextTrack', { bubbles: true }));
+                }
+            );
+
+            document.getElementById('playPauseButton').addEventListener('click',
+                (event) => {
+                    event.stopPropagation();
+                    if (this.playingSong.paused) {
+                        this.playingSong.play();
+                    } else {
+                        this.playingSong.pause();
+                    }
                 }
             );
 

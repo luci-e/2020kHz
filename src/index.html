@@ -33,7 +33,6 @@
             :host {
                 height: 100%;
                 width: 100%;
-                border: 1px solid black;
                 box-sizing: border-box;
                 display: flex;
                 flex-direction: column;
@@ -84,7 +83,6 @@
                 height: 100%;
                 width: 100%;
                 box-sizing: border-box;
-                border: 1px solid;
                 display: flex;
                 flex-direction: column;
                 flex-wrap: nowrap;
@@ -96,6 +94,7 @@
 
             ::slotted(#playingSongImage) {
                 width: 300px;
+                border-radius: 16px;
             }
 
             ::slotted(#playingSong) {
@@ -111,6 +110,7 @@
                 align-items: center;
                 flex-wrap: wrap;
             }
+
         </style>
 
 
@@ -124,6 +124,7 @@
         <div id='audioControls'>
             <slot name='playingSong'></slot>
             <slot name='previousTrack'></slot>
+            <slot name='playPause'></slot>
             <slot name='nextTrack'></slot>
         </div>
 
@@ -189,6 +190,7 @@
 
             <audio id='playingSong' preload="auto" controls slot='playingSong'></audio>
             <input type='button' class='controlButton' id='previousTrackButton' slot='previousTrack'>
+            <input type='button' class='controlButton playButton' id='playPauseButton' slot='playPause'>
             <input type='button' class='controlButton' id='nextTrackButton' slot='nextTrack'>
         </div>
 

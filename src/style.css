@@ -8,23 +8,29 @@ body {
     display: flex;
     flex-direction: column;
     justify-content: center;
-    background: wheat;
+    background: linear-gradient(180deg, skyblue, wheat);
     align-items: center;
 }
 
 .controlButton {
     height: 40px;
     width: 40px;
-    background-color: cornsilk;
-    border: 1px solid black;
-    border-radius: 20px;
+    background-color: lavender;
+    border: none;
+    border-radius: 10px;
     background-size: 70% 70%;
     background-repeat: no-repeat;
     background-position: center;
     background-blend-mode: normal;
     cursor: pointer;
     box-shadow: -1px 1px;
+    transition: box-shadow .5s;
 }
+
+.controlButton:hover{
+    box-shadow: -2px 2px;
+}
+
 
 #playerManager {
     background: lavenderblush;
@@ -35,6 +41,7 @@ body {
     height: 500px;
     width: 700px;
     box-shadow: -3px 3px 2px 0px;
+    border-radius: 8px;
 }
 
 #leftPanel {
@@ -43,7 +50,7 @@ body {
     box-sizing: border-box;
     width: 300px;
     height: 500px;
-    /* padding-top: 10px; */
+    border-radius: 8px 0 0 8px;
 }
 
 #songList {
@@ -59,12 +66,12 @@ body {
     flex-direction: row;
     justify-content: space-around;
     align-items: center;
-    border: 1px solid black;
 }
 
 #player {
     height: 500px;
     width: 400px;
+    border-radius: 0 8px 8px 0;
 }
 
 @media (max-height: 500px) {
@@ -117,4 +124,16 @@ body {
 
 #nextTrackButton {
     background-image: url(./pageroot/body/playerManager/player/next.png);
+}
+
+.playButton{
+    background-image: url(./pageroot/body/playerManager/player/play-button.png);
+}
+
+.pauseButton{
+    background-image: url(./pageroot/body/playerManager/player/pause-button.png);
+}
+
+#playingSong::-webkit-media-controls-play-button{
+    display: none;
 }
