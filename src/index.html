@@ -9,13 +9,25 @@
     <template id="songTemplate">
         <style>
             :host {
-                border: 1px solid black;
+                border-radius: 4px;
                 cursor: pointer;
                 box-sizing: border-box;
             }
 
             .artist {
                 background-color: lavender;
+                padding: 4px;
+                border-radius: 4px 4px 0 0;
+                font-family: Arial, Helvetica, sans-serif;
+                font-style: italic;
+                font-variant: small-caps;
+            }
+
+            .title {
+                padding: 4px;
+                font-family: Arial, Helvetica, sans-serif;
+                font-variant: petite-caps;
+                font-size: .8em;
             }
         </style>
 
@@ -102,15 +114,25 @@
             }
 
             #audioControls {
+                height: 100px;
                 width: 100%;
                 display: flex;
                 flex-direction: row;
                 justify-content: space-around;
+                align-content: space-between;
                 box-sizing: border-box;
                 align-items: center;
                 flex-wrap: wrap;
             }
 
+            #turntable {
+                --side-size: 150px;
+                height: var(--side-size);
+                width: var(--side-size);
+                border-radius: calc( var(--side-size)/2 );
+                background: linear-gradient(45deg, black, transparent);
+            }
+            
         </style>
 
 
@@ -119,6 +141,9 @@
         <div>
             <slot name='playingSongArtist'></slot> -
             <slot name='playingSongTitle'></slot>
+        </div>
+
+        <div id='turntable'>
         </div>
 
         <div id='audioControls'>

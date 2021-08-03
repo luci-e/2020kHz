@@ -23,12 +23,12 @@ body {
     background-position: center;
     background-blend-mode: normal;
     cursor: pointer;
-    box-shadow: -1px 1px;
+    box-shadow: -1px 1px rgb(10 10 10 / 100%);
     transition: box-shadow .5s;
 }
 
 .controlButton:hover{
-    box-shadow: -2px 2px;
+    box-shadow: -2px 2px rgb(10 10 10 / 50%);
 }
 
 
@@ -40,7 +40,7 @@ body {
     box-sizing: border-box;
     height: 500px;
     width: 700px;
-    box-shadow: -3px 3px 2px 0px;
+    box-shadow: -3px 3px 2px 0px rgb(10 10 10 / 50%);
     border-radius: 8px;
 }
 

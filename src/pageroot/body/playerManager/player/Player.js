@@ -9,6 +9,8 @@ class Player extends HTMLDivElement {
     playingSongArtist;
     playingSongTitle;
 
+    turntable;
+
     constructor() {
         super();
     }
@@ -22,6 +24,7 @@ class Player extends HTMLDivElement {
             this.playingSongImage = document.getElementById('playingSongImage');
             this.playingSongArtist = document.getElementById('playingSongArtist');
             this.playingSongTitle = document.getElementById('playingSongTitle');
+            this.turntable = this.shadowRoot.getElementById('turntable');
 
             this.playingSong.addEventListener('ended',
                 () => {
@@ -42,6 +45,8 @@ class Player extends HTMLDivElement {
                     playPauseButton.classList.replace('pauseButton', 'playButton');
                 }
             );
+
+            this.playingSong.addEventListener('timeupdate', this.updateTurntable.bind(this));
 
             document.getElementById('previousTrackButton').addEventListener('click',
                 (event) => {
@@ -104,6 +109,11 @@ class Player extends HTMLDivElement {
         } else {
             this.playingSong.play();
         }
+    }
+
+    async updateTurntable(event){
+        let rotation = 2*Math.PI * event.target.currentTime / event.target.duration;
+        this.turntable.style.transform = `rotate(${rotation}rad)`;
     }
 }
 
