@@ -129,10 +129,11 @@
                 --side-size: 150px;
                 height: var(--side-size);
                 width: var(--side-size);
-                border-radius: calc( var(--side-size)/2 );
-                background: linear-gradient(45deg, black, transparent);
+                border-radius: calc(var(--side-size)/2);
+                transition: transform linear .2s;
+                background-size: cover;
+                background-image: url(./pageroot/body/playerManager/player/vynil.png);
             }
-            
         </style>
 
 
@@ -179,6 +180,7 @@
         }
     </script>
 
+    <script src="https://code.jquery.com/jquery-3.6.0.slim.min.js" integrity="sha256-u7e5khyithlIdTpu22PHhENmPcRdFiHRjhAuHcs05RI=" crossorigin="anonymous"></script>
     <script src="./modules/misc/ID3.js" charset="utf-8"></script>
     <script src="./modules/misc/PapaParse-5.0.2/papaparse.min.js" charset="utf-8"></script>
 

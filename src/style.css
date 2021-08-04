@@ -137,3 +137,11 @@ body {
 #playingSong::-webkit-media-controls-play-button{
     display: none;
 }
+
+#playingSong::-webkit-media-controls-timeline{
+    display: none;
+}
+
+#playingSong::-webkit-media-controls-panel{
+    justify-content: center;
+}
