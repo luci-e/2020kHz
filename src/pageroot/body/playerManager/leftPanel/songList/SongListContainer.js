@@ -42,10 +42,10 @@ class SongListContainer extends ScrollableList {
         }
 
         songList = songList.sort( (first, second) =>{
-            let titleCompare = first.songArtist.localeCompare(second.songArtist);
+            let titleCompare = first.songTitle.localeCompare(second.songTitle);
 
             if (titleCompare == 0){
-                return first.songTitle.localeCompare(second.songTitle);
+                return first.songArtist?.localeCompare(second?.songArtist || '') || 0;
             }
 
             return titleCompare;
