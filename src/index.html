@@ -7,35 +7,11 @@
     <!-- Hic sunt templates -->
 
     <template id="songTemplate">
-        <style>
-            :host {
-                border-radius: 4px;
-                cursor: pointer;
-                box-sizing: border-box;
-            }
-
-            .artist {
-                background-color: lavender;
-                padding: 4px;
-                border-radius: 4px 4px 0 0;
-                font-family: Arial, Helvetica, sans-serif;
-                font-style: italic;
-                font-variant: small-caps;
-            }
-
-            .title {
-                padding: 4px;
-                font-family: Arial, Helvetica, sans-serif;
-                font-variant: petite-caps;
-                font-size: .8em;
-            }
-        </style>
-
-        <div class='artist'>
+        <div part='artist'>
             <slot name='songArtist'></slot>
         </div>
 
-        <div class='title'>
+        <div part='title'>
             <slot name="songName"></slot>
         </div>
     </template>
@@ -71,15 +47,8 @@
                 background-color: #555;
             }
 
-            ::slotted([odd]) {
-                background: #e0e0e0;
-            }
-
-            ::slotted([even]) {
-                background: #f0f0f0;
-            }
-
             ::slotted(*) {
+                background: #f0f0f0;
                 width: 95%;
                 margin: 3px auto 3px auto;
             }
@@ -90,64 +59,17 @@
     </template>
 
     <template id="playerTemplate">
-        <style>
-            :host {
-                height: 100%;
-                width: 100%;
-                box-sizing: border-box;
-                display: flex;
-                flex-direction: column;
-                flex-wrap: nowrap;
-                align-items: center;
-                overflow: hidden;
-                justify-content: space-between;
-                padding: 10px;
-            }
-
-            ::slotted(#playingSongImage) {
-                width: 300px;
-                border-radius: 16px;
-            }
-
-            ::slotted(#playingSong) {
-                width: 100%;
-            }
-
-            #audioControls {
-                height: 100px;
-                width: 100%;
-                display: flex;
-                flex-direction: row;
-                justify-content: space-around;
-                align-content: space-between;
-                box-sizing: border-box;
-                align-items: center;
-                flex-wrap: wrap;
-            }
-
-            #turntable {
-                --side-size: 150px;
-                height: var(--side-size);
-                width: var(--side-size);
-                border-radius: calc(var(--side-size)/2);
-                transition: transform linear .2s;
-                background-size: cover;
-                background-image: url(./pageroot/body/playerManager/player/vynil.png);
-            }
-        </style>
-
-
-        <slot name='playingSongImage'></slot>
+        <slot part='playingSongImage' name='playingSongImage'></slot>
 
         <div>
             <slot name='playingSongArtist'></slot> -
             <slot name='playingSongTitle'></slot>
         </div>
 
-        <div id='turntable'>
+        <div part='turntable' id='turntable'>
         </div>
 
-        <div id='audioControls'>
+        <div part='audioControls' id='audioControls'>
             <slot name='playingSong'></slot>
             <slot name='previousTrack'></slot>
             <slot name='playPause'></slot>
@@ -181,8 +103,8 @@
     </script>
 
     <script src="https://code.jquery.com/jquery-3.6.0.slim.min.js" integrity="sha256-u7e5khyithlIdTpu22PHhENmPcRdFiHRjhAuHcs05RI=" crossorigin="anonymous"></script>
-    <script src="./modules/misc/ID3.js" charset="utf-8"></script>
-    <script src="./modules/misc/PapaParse-5.0.2/papaparse.min.js" charset="utf-8"></script>
+    <script src="./modules/misc/ID3.js" charset="utf-8" defer></script>
+    <script src="./modules/misc/PapaParse-5.0.2/papaparse.min.js" charset="utf-8" defer></script>
 
     <script src="./modules/misc/ScrollableList.js" charset="utf-8"></script>
     <script src="./pageroot/body/playerManager/leftPanel/songlist/SongListContainer.js" charset="utf-8"></script>

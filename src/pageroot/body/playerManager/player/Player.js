@@ -81,10 +81,12 @@ class Player extends HTMLDivElement {
                 this.lastRadians = this.getMouseRadians(event);
                 $(this.turntable).css('transition', 'transform 0s linear');
              });
+
             document.addEventListener('mouseup', () => {
                 this.mouseDown = false;
                 $(this.turntable).css('transition', 'transform .2s linear');
              });
+
             document.addEventListener('mousemove', this.mouse.bind(this));
         })
 

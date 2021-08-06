@@ -1,3 +1,10 @@
+:root{
+    --color-control-buttons: lavender;
+    --color-bg-top: skyblue;
+    --color-bg-bottom: wheat;
+    --color-player: lavenderblush;
+}
+
 body {
     position: fixed;
     top: 0px;
@@ -8,14 +15,14 @@ body {
     display: flex;
     flex-direction: column;
     justify-content: center;
-    background: linear-gradient(180deg, skyblue, wheat);
+    background: linear-gradient(180deg, var(--color-bg-top), var(--color-bg-bottom));
     align-items: center;
 }
 
 .controlButton {
     height: 40px;
     width: 40px;
-    background-color: lavender;
+    background-color: var(--color-control-buttons);
     border: none;
     border-radius: 10px;
     background-size: 70% 70%;
@@ -33,7 +40,7 @@ body {
 
 
 #playerManager {
-    background: lavenderblush;
+    background: var(--color-player);
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -42,6 +49,7 @@ body {
     width: 700px;
     box-shadow: -3px 3px 2px 0px rgb(10 10 10 / 50%);
     border-radius: 8px;
+    transform: translateZ(1px) rotate3d(0, 1, 0, 180deg);
 }
 
 #leftPanel {
@@ -68,22 +76,12 @@ body {
     align-items: center;
 }
 
-#player {
-    height: 500px;
-    width: 400px;
-    border-radius: 0 8px 8px 0;
-}
-
 @media (max-height: 500px) {
     #playerManager {
         height: 90%;
     }
 
     #leftPanel {
-        height: 100%;
-    }
-
-    #player {
         height: 100%;
     }
 }
@@ -134,6 +132,16 @@ body {
     background-image: url(./pageroot/body/playerManager/player/pause-button.png);
 }
 
+#playingSongImage{
+    width: 300px;
+    max-height: 150px;
+    border-radius: 16px;
+}
+
+#playingSong{
+    width: 100%;
+}
+
 #playingSong::-webkit-media-controls-play-button{
     display: none;
 }
@@ -145,3 +153,75 @@ body {
 #playingSong::-webkit-media-controls-panel{
     justify-content: center;
 }
+
+/* Song item style */
+
+[is='song-item']{
+    border-radius: 4px;
+    cursor: pointer;
+    box-sizing: border-box;
+}
+
+[is='song-item']::part(artist){
+    background-color: lavender;
+    padding: 4px;
+    border-radius: 4px 4px 0 0;
+    font-family: Arial, Helvetica, sans-serif;
+    font-style: italic;
+    font-variant: small-caps;
+}
+
+
+[is='song-item']::part(title){
+    padding: 4px;
+    font-family: Arial, Helvetica, sans-serif;
+    font-variant: petite-caps;
+    font-size: .8em;
+}
+
+/* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+
+/* Player panel style */
+
+[is='player-panel'] {
+    height: 500px;
+    width: 400px;
+    border-radius: 0 8px 8px 0;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    align-items: center;
+    overflow: hidden;
+    justify-content: space-between;
+    padding: 10px;
+}
+
+[is='player-panel']::part(audioControls) {
+    height: 100px;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-content: space-between;
+    box-sizing: border-box;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+[is='player-panel']::part(turntable) {
+    --side-size: 150px;
+    height: var(--side-size);
+    width: var(--side-size);
+    background-size: cover;
+    background-image: url(./pageroot/body/playerManager/player/vynil.png);
+    cursor: pointer;
+}
+
+@media (max-height: 500px) {
+    [is='player-panel'] {
+        height: 100%;
+    }
+}
+
+/* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
