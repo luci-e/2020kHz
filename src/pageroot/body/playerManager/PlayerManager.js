@@ -78,9 +78,6 @@ class PlayerManager extends HTMLDivElement {
             let songTitle = this.currentCumulative[songIndex][0];
             let songScore = this.currentCumulative[songIndex][1] - (songIndex > 0 ? this.currentCumulative[songIndex - 1][1] : 0);
 
-            let ugh = this.currentCumulative.map((el) => { return Array.from(el) });
-            //             console.log(ugh);
-
             this.currentCumulative.splice(songIndex, 1);
 
             for (let i = songIndex; i < this.currentCumulative.length; i++) {

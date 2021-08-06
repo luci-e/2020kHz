@@ -1,8 +1,63 @@
 :root{
-    --color-control-buttons: lavender;
-    --color-bg-top: skyblue;
-    --color-bg-bottom: wheat;
-    --color-player: lavenderblush;
+    color-scheme: dark light;
+}
+
+@media (prefers-color-scheme: light) {
+
+    :root{
+        --color-control-buttons: lavender;
+        --color-bg-top: skyblue;
+        --color-bg-bottom: wheat;
+        --color-player: #fff0f57f;
+        --color-user-manager: red;
+        color: black;
+    }
+
+    ::-webkit-scrollbar-track {
+        -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+        border-radius: 10px;
+        background-color: aliceblue;
+    }
+
+    ::-webkit-scrollbar {
+        width: 12px;
+    }
+
+    ::-webkit-scrollbar-thumb {
+        border-radius: 10px;
+        -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, .3);
+        background-color: darkgray;
+    }
+
+}
+
+@media (prefers-color-scheme: dark) {
+
+    :root{
+        --color-control-buttons: darkgrey;
+        --color-bg-top: midnightblue;
+        --color-bg-bottom: rebeccapurple;
+        --color-player: #a9a9a9bf;
+        --color-user-manager: red;
+        color: #ebebeb;
+    }
+
+    ::-webkit-scrollbar-track {
+        -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+        border-radius: 10px;
+        background-color: darkgray;
+    }
+
+    ::-webkit-scrollbar {
+        width: 12px;
+    }
+
+    ::-webkit-scrollbar-thumb {
+        border-radius: 10px;
+        -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, .3);
+        background-color: dimgray;
+    }
+
 }
 
 body {
@@ -38,9 +93,22 @@ body {
     box-shadow: -2px 2px rgb(10 10 10 / 50%);
 }
 
+#centralContainer{
+    position: absolute;
+    height: 500px;
+    width: 700px;
+    transition: transform .5s;
+    transform-style: preserve-3d;
+    perspective: 20cm;
+}
 
-#playerManager {
-    background: var(--color-player);
+.rotate180{
+    transform: rotateY(180deg);
+}
+
+#userManager {
+    background: var(--color-user-manager);
+    position: absolute;
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -49,7 +117,23 @@ body {
     width: 700px;
     box-shadow: -3px 3px 2px 0px rgb(10 10 10 / 50%);
     border-radius: 8px;
-    transform: translateZ(1px) rotate3d(0, 1, 0, 180deg);
+    backface-visibility: hidden;
+    transform: rotateY(180deg) translateZ(-1px);
+}
+
+#playerManager {
+    background: var(--color-player);
+    position: absolute;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    box-sizing: border-box;
+    height: 500px;
+    width: 700px;
+    box-shadow: -3px 3px 2px 0px rgb(10 10 10 / 50%);
+    border-radius: 8px;
+    backface-visibility: hidden;
+    transform: translateZ(1px);
 }
 
 #leftPanel {
@@ -77,13 +161,22 @@ body {
 }
 
 @media (max-height: 500px) {
-    #playerManager {
+    #centralContainer{
         height: 90%;
+    }
+
+    #playerManager {
+        height: 100%;
     }
 
     #leftPanel {
         height: 100%;
     }
+}
+
+
+#userSettingsButton {
+    background-image: url(./pageroot/body/playerManager/leftPanel/controlBar/user.png);
 }
 
 #uploadFilesButton {
@@ -116,22 +209,6 @@ body {
     visibility: hidden;
 }
 
-#previousTrackButton {
-    background-image: url(./pageroot/body/playerManager/player/back.png);
-}
-
-#nextTrackButton {
-    background-image: url(./pageroot/body/playerManager/player/next.png);
-}
-
-.playButton{
-    background-image: url(./pageroot/body/playerManager/player/play-button.png);
-}
-
-.pauseButton{
-    background-image: url(./pageroot/body/playerManager/player/pause-button.png);
-}
-
 #playingSongImage{
     width: 300px;
     max-height: 150px;
@@ -139,7 +216,7 @@ body {
 }
 
 #playingSong{
-    width: 100%;
+    width: 54%;
 }
 
 #playingSong::-webkit-media-controls-play-button{
@@ -156,12 +233,6 @@ body {
 
 /* Song item style */
 
-[is='song-item']{
-    border-radius: 4px;
-    cursor: pointer;
-    box-sizing: border-box;
-}
-
 [is='song-item']::part(artist){
     background-color: lavender;
     padding: 4px;
@@ -171,7 +242,6 @@ body {
     font-variant: small-caps;
 }
 
-
 [is='song-item']::part(title){
     padding: 4px;
     font-family: Arial, Helvetica, sans-serif;
@@ -179,48 +249,29 @@ body {
     font-size: .8em;
 }
 
-/* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+@media (prefers-color-scheme: light) {
+    [is='song-item']{
+        background-color: #ececec;
+    }
 
-/* Player panel style */
+    [is='song-item']::part(artist){
+        background-color: lavender;
+    }
 
-[is='player-panel'] {
-    height: 500px;
-    width: 400px;
-    border-radius: 0 8px 8px 0;
-    box-sizing: border-box;
-    display: flex;
-    flex-direction: column;
-    flex-wrap: nowrap;
-    align-items: center;
-    overflow: hidden;
-    justify-content: space-between;
-    padding: 10px;
+    [is='song-item']::part(title){
+    }
 }
 
-[is='player-panel']::part(audioControls) {
-    height: 100px;
-    width: 100%;
-    display: flex;
-    flex-direction: row;
-    justify-content: space-around;
-    align-content: space-between;
-    box-sizing: border-box;
-    align-items: center;
-    flex-wrap: wrap;
-}
+@media (prefers-color-scheme: dark) {
+    [is='song-item']{
+        background-color: #7f7f7f;
+    }
 
-[is='player-panel']::part(turntable) {
-    --side-size: 150px;
-    height: var(--side-size);
-    width: var(--side-size);
-    background-size: cover;
-    background-image: url(./pageroot/body/playerManager/player/vynil.png);
-    cursor: pointer;
-}
+    [is='song-item']::part(artist){
+    background-color: #424242;
+    }
 
-@media (max-height: 500px) {
-    [is='player-panel'] {
-        height: 100%;
+    [is='song-item']::part(title){
     }
 }
 

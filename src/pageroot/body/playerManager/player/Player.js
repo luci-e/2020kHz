@@ -51,21 +51,21 @@ class Player extends HTMLDivElement {
 
             this.playingSong.addEventListener('timeupdate', this.updateTurntable.bind(this));
 
-            document.getElementById('previousTrackButton').addEventListener('click',
+            this.shadowRoot.getElementById('previousTrackButton').addEventListener('click',
                 (event) => {
                     event.stopPropagation();
                     this.dispatchEvent(new Event('previousTrack', { bubbles: true }));
                 }
             );
 
-            document.getElementById('nextTrackButton').addEventListener('click',
+            this.shadowRoot.getElementById('nextTrackButton').addEventListener('click',
                 (event) => {
                     event.stopPropagation();
                     this.dispatchEvent(new Event('nextTrack', { bubbles: true }));
                 }
             );
 
-            document.getElementById('playPauseButton').addEventListener('click',
+            this.shadowRoot.getElementById('playPauseButton').addEventListener('click',
                 (event) => {
                     event.stopPropagation();
                     if (this.playingSong.paused) {

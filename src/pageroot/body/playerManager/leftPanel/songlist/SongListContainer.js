@@ -36,7 +36,6 @@ class SongListContainer extends ScrollableList {
 
             song.setAttribute('is', 'song-item');
             song.slot = "element";
-            song.setAttribute(i % 2 == 0 ? "even" : "odd", '');
 
             songList.push(song);
             i++;
@@ -48,7 +47,7 @@ class SongListContainer extends ScrollableList {
             if (titleCompare == 0){
                 return first.songTitle.localeCompare(second.songTitle);
             }
-            
+
             return titleCompare;
         });
 

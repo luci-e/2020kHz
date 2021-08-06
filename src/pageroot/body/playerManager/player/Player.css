@@ -1,0 +1,75 @@
+:host{
+    height: 500px;
+    width: 400px;
+    border-radius: 0 8px 8px 0;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    align-items: center;
+    overflow: hidden;
+    justify-content: space-between;
+    padding: 10px;
+}
+
+.controlButton {
+    height: 40px;
+    width: 40px;
+    background-color: var(--color-control-buttons);
+    border: none;
+    border-radius: 10px;
+    background-size: 70% 70%;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-blend-mode: normal;
+    cursor: pointer;
+    box-shadow: -1px 1px rgb(10 10 10 / 100%);
+    transition: box-shadow .5s;
+}
+
+.controlButton:hover{
+    box-shadow: -2px 2px rgb(10 10 10 / 50%);
+}
+
+#audioControls {
+    height: 40px;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-content: space-between;
+    box-sizing: border-box;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+#turntable {
+    --side-size: 150px;
+    height: var(--side-size);
+    width: var(--side-size);
+    background-size: cover;
+    background-image: url(./vynil.png);
+    cursor: pointer;
+}
+
+#previousTrackButton {
+    background-image: url(./back.png);
+}
+
+#nextTrackButton {
+    background-image: url(./next.png);
+}
+
+.playButton{
+    background-image: url(./play-button.png);
+}
+
+.pauseButton{
+    background-image: url(./pause-button.png);
+}
+
+@media (max-height: 500px) {
+    :host{
+        height: 100%;
+    }
+}
