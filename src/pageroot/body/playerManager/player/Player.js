@@ -10,7 +10,7 @@ class Player extends HTMLDivElement {
     playingSongTitle;
 
     turntable;
-    mouseDown = false;
+    movementInProgress = false;
     lastRadians;
     currentRadians = 0;
 
@@ -37,14 +37,14 @@ class Player extends HTMLDivElement {
 
             this.playingSong.addEventListener('play',
                 () => {
-                    let playPauseButton = document.getElementById('playPauseButton');
+                    let playPauseButton = this.shadowRoot.getElementById('playPauseButton');
                     playPauseButton.classList.replace('playButton', 'pauseButton');
                 }
             );
 
             this.playingSong.addEventListener('pause',
                 () => {
-                    let playPauseButton = document.getElementById('playPauseButton');
+                    let playPauseButton = this.shadowRoot.getElementById('playPauseButton');
                     playPauseButton.classList.replace('pauseButton', 'playButton');
                 }
             );
@@ -77,17 +77,32 @@ class Player extends HTMLDivElement {
             );
 
             this.turntable.addEventListener('mousedown', (event) => {
-                this.mouseDown = true;
-                this.lastRadians = this.getMouseRadians(event);
+                this.movementInProgress = true;
+                this.lastRadians = this.getPointerRadians(event);
                 $(this.turntable).css('transition', 'transform 0s linear');
-             });
+            });
 
             document.addEventListener('mouseup', () => {
-                this.mouseDown = false;
+                this.movementInProgress = false;
                 $(this.turntable).css('transition', 'transform .2s linear');
-             });
+            });
 
-            document.addEventListener('mousemove', this.mouse.bind(this));
+            this.turntable.addEventListener('touchstart', (event) => {
+                event.preventDefault();
+                console.log('touchstart');
+                this.movementInProgress = true;
+                this.lastRadians = this.getPointerRadians(event);
+                $(this.turntable).css('transition', 'transform 0s linear');
+            });
+
+            document.addEventListener('touchend', () => {
+                console.log('touchend');
+                this.movementInProgress = false;
+                $(this.turntable).css('transition', 'transform .2s linear');
+            });
+
+            document.addEventListener('mousemove', this.pointerMovement.bind(this));
+            document.addEventListener('touchmove', this.pointerMovement.bind(this));
         })
 
     }
@@ -131,33 +146,42 @@ class Player extends HTMLDivElement {
         this.turntable.style.transform = `rotate(${rotation}rad)`;
     }
 
-    getMouseRadians(event){
+    getPointerRadians(event) {
         let img = $(this.turntable);
         let offset = img.offset();
         let center_x = (offset.left) + (img.width() / 2);
         let center_y = (offset.top) + (img.height() / 2);
-        let mouse_x = event.pageX;
-        let mouse_y = event.pageY;
+        let pointer_x = 0;
+        let pointer_y = 0;
 
-        let radians = Math.atan2(center_y - mouse_y, mouse_x - center_x);
+        if(event instanceof TouchEvent){
+            pointer_x = event.changedTouches[0].pageX;
+            pointer_y = event.changedTouches[0].pageY;
+        }else{
+            pointer_x = event.pageX;
+            pointer_y = event.pageY;
+        }
 
-        radians = radians < 0 ? radians + 2*Math.PI : radians;
+
+        let radians = Math.atan2(center_y - pointer_y, pointer_x - center_x);
+
+        radians = radians < 0 ? radians + 2 * Math.PI : radians;
 
         return radians;
     }
 
-    async mouse(event) {
-        if (this.mouseDown) {
+    async pointerMovement(event) {
+        if (this.movementInProgress) {
             let img = $(this.turntable);
-            let radians = this.getMouseRadians(event);
+            let radians = this.getPointerRadians(event);
 
-            this.currentRadians = this.currentRadians - (radians - this.lastRadians) + (2*Math.PI);
-            this.currentRadians %= (2*Math.PI);
+            this.currentRadians = this.currentRadians - (radians - this.lastRadians) + (2 * Math.PI);
+            this.currentRadians %= (2 * Math.PI);
             this.lastRadians = radians;
 
             img.css('transform', `rotate(${this.currentRadians}rad)`);
 
-            let newTime = this.currentRadians * this.playingSong.duration / (2*Math.PI);
+            let newTime = this.currentRadians * this.playingSong.duration / (2 * Math.PI);
             this.playingSong.currentTime = newTime;
 
         }

@@ -12,7 +12,7 @@
 */
 
 var cacheBaseName = 'theCache';
-var cacheVersion = 1;
+var cacheVersion = 2;
 
 var cacheName = `${cacheBaseName}_${cacheVersion}`;
 
@@ -20,17 +20,30 @@ var urlsToCache = [
     './modules/misc/ID3.js',
     './modules/misc/PapaParse-5.0.2/papaparse.min.js',
     './modules/misc/ScrollableList.js',
-    './pageroot/body/playerManager/leftPanel/songlist/SongListContainer.js',
-    './pageroot/body/playerManager/leftPanel/songlist/Song.js',
-    './pageroot/body/playerManager/PlayerManager.js',
-    './pageroot/body/playerManager/player/Player.js',
+
     './pageroot/body/playerManager/leftPanel/controlBar/arrow-right.png',
-    './pageroot/body/playerManager/player/back.png',
     './pageroot/body/playerManager/leftPanel/controlBar/curve.png',
     './pageroot/body/playerManager/leftPanel/controlBar/dice.png',
     './pageroot/body/playerManager/leftPanel/controlBar/folder.png',
-    './pageroot/body/playerManager/player/next.png',
     './pageroot/body/playerManager/leftPanel/controlBar/shuffle.png',
+    './pageroot/body/playerManager/leftPanel/controlBar/user.png',
+
+    './pageroot/body/playerManager/leftPanel/songList/Song.css',
+    './pageroot/body/playerManager/leftPanel/songList/Song.js',
+    './pageroot/body/playerManager/leftPanel/songList/SongListContainer.js',
+
+    './pageroot/body/playerManager/player/back.png',
+    './pageroot/body/playerManager/player/next.png',
+    './pageroot/body/playerManager/player/pause-button.png',
+    './pageroot/body/playerManager/player/play-button.png',
+    './pageroot/body/playerManager/player/Player.css',
+    './pageroot/body/playerManager/player/Player.js',
+    './pageroot/body/playerManager/player/vynil.png',
+
+    './pageroot/body/playerManager/PlayerManager.js',
+
+    './pageroot/body/misc.js',
+
     './index.html',
     './style.css'
 ]
