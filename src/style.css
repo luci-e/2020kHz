@@ -2,62 +2,69 @@
     color-scheme: dark light;
 }
 
-@media (prefers-color-scheme: light) {
+[data-user-theme='true']{
+    --color-control-buttons: lavender;
+    --color-bg-top: skyblue;
+    --color-bg-bottom: wheat;
+    --color-player: #fff0f57f;
+    --color-user-manager: red;
 
-    :root{
+    --color-song: #ececec;
+    --color-song-artist: lavender;
+
+    --color-scrollbar-track: aliceblue;
+    --color-scrollbar-thumb: darkgray;
+
+    color: black;
+}
+
+@media (prefers-color-scheme: light) {
+    [data-user-theme='false']{
         --color-control-buttons: lavender;
         --color-bg-top: skyblue;
         --color-bg-bottom: wheat;
         --color-player: #fff0f57f;
-        --color-user-manager: red;
+        --color-user-manager: #fff0f57f;
+
+        --color-song: #ececec;
+        --color-song-artist: lavender;
+
+        --color-scrollbar-track: aliceblue;
+        --color-scrollbar-thumb: darkgray;
+
         color: black;
     }
-
-    ::-webkit-scrollbar-track {
-        -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
-        border-radius: 10px;
-        background-color: aliceblue;
-    }
-
-    ::-webkit-scrollbar {
-        width: 12px;
-    }
-
-    ::-webkit-scrollbar-thumb {
-        border-radius: 10px;
-        -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, .3);
-        background-color: darkgray;
-    }
-
 }
 
 @media (prefers-color-scheme: dark) {
-
-    :root{
+    [data-user-theme='false']{
         --color-control-buttons: darkgrey;
         --color-bg-top: midnightblue;
         --color-bg-bottom: rebeccapurple;
         --color-player: #a9a9a9bf;
-        --color-user-manager: red;
+        --color-user-manager: #a9a9a9bf;
+        --color-song: #7f7f7f;
+        --color-song-artist: #424242;
+        --color-scrollbar-track: darkgray;
+        --color-scrollbar-thumb: dimgray;
         color: #ebebeb;
     }
+}
 
-    ::-webkit-scrollbar-track {
-        -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
-        border-radius: 10px;
-        background-color: darkgray;
-    }
+::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+    border-radius: 10px;
+    background-color: var(--color-scrollbar-track);
+}
 
-    ::-webkit-scrollbar {
-        width: 12px;
-    }
+::-webkit-scrollbar {
+    width: 12px;
+}
 
-    ::-webkit-scrollbar-thumb {
-        border-radius: 10px;
-        -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, .3);
-        background-color: dimgray;
-    }
-
+::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, .3);
+    background-color: var(--color-scrollbar-thumb);
 }
 
 body {
@@ -136,22 +143,24 @@ body {
     transform: translateZ(1px);
 }
 
-#leftPanel {
+#songsPanel {
     display: flex;
+    padding: 10px;
     flex-direction: column;
     box-sizing: border-box;
     width: 300px;
     height: 500px;
-    border-radius: 8px 0 0 8px;
+    /* border-radius: 8px 0 0 8px; */
 }
 
 #songList {
-    flex: 1;
+    /* flex: 1; */
     width: 100%;
 }
 
 #controlBar {
-    height: 60px;
+    height: 40px;
+    margin-top: 10px;
     width: 100%;
     box-sizing: border-box;
     display: flex;
@@ -169,18 +178,47 @@ body {
         height: 100%;
     }
 
-    #leftPanel {
+    #userManager {
         height: 100%;
+    }
+
+    #songsPanel {
+        height: 100%;
+    }
+}
+
+@media (max-width: 700px), (orientation: portrait) {
+    #centralContainer{
+        height: 90%;
+        width: 90%;
+    }
+
+    #playerManager {
+        height: 100%;
+        display: flex;
+        flex-direction: column-reverse;
+        align-items: center;
+        width: 100%;
+    }
+
+    #userManager {
+        height: 100%;
+        width: 100%;
+    }
+
+    #songsPanel {
+        height: 40%;
+        width: 100%;
     }
 }
 
 
 #userSettingsButton {
-    background-image: url(./pageroot/body/playerManager/leftPanel/controlBar/user.png);
+    background-image: url(./pageroot/body/playerManager/songsPanel/controlBar/user.png);
 }
 
 #uploadFilesButton {
-    background-image: url(./pageroot/body/playerManager/leftPanel/controlBar/folder.png);
+    background-image: url(./pageroot/body/playerManager/songsPanel/controlBar/folder.png);
 }
 
 #uploadFilesButton::file-selector-button {
@@ -190,19 +228,19 @@ body {
 #modeSwitchButton {}
 
 .sequential {
-    background-image: url(./pageroot/body/playerManager/leftPanel/controlBar/arrow-right.png);
+    background-image: url(./pageroot/body/playerManager/songsPanel/controlBar/arrow-right.png);
 }
 
 .shuffle {
-    background-image: url(./pageroot/body/playerManager/leftPanel/controlBar/shuffle.png);
+    background-image: url(./pageroot/body/playerManager/songsPanel/controlBar/shuffle.png);
 }
 
 .fairshuffle {
-    background-image: url(./pageroot/body/playerManager/leftPanel/controlBar/dice.png);
+    background-image: url(./pageroot/body/playerManager/songsPanel/controlBar/dice.png);
 }
 
 #uploadProbsButton {
-    background-image: url(./pageroot/body/playerManager/leftPanel/controlBar/curve.png);
+    background-image: url(./pageroot/body/playerManager/songsPanel/controlBar/curve.png);
 }
 
 #uploadProbsButton::file-selector-button {
@@ -233,13 +271,14 @@ body {
 
 /* Song item style */
 
-[is='song-item']::part(artist){
+[is='song-item']::part(header){
     background-color: lavender;
     padding: 4px;
     border-radius: 4px 4px 0 0;
     font-family: Arial, Helvetica, sans-serif;
     font-style: italic;
     font-variant: small-caps;
+    background-color: var(--color-song-artist);
 }
 
 [is='song-item']::part(title){
@@ -247,32 +286,6 @@ body {
     font-family: Arial, Helvetica, sans-serif;
     font-variant: petite-caps;
     font-size: .8em;
-}
-
-@media (prefers-color-scheme: light) {
-    [is='song-item']{
-        background-color: #ececec;
-    }
-
-    [is='song-item']::part(artist){
-        background-color: lavender;
-    }
-
-    [is='song-item']::part(title){
-    }
-}
-
-@media (prefers-color-scheme: dark) {
-    [is='song-item']{
-        background-color: #7f7f7f;
-    }
-
-    [is='song-item']::part(artist){
-    background-color: #424242;
-    }
-
-    [is='song-item']::part(title){
-    }
 }
 
 /* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */

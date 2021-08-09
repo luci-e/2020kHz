@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" dir="ltr" style='height:100%; width:100%'>
+<html lang="en" dir="ltr" data-user-theme='false' style='height:100%; width:100%'>
 
 <head>
     <meta charset="utf-8">
@@ -7,10 +7,11 @@
     <!-- Hic sunt templates -->
 
     <template id="songTemplate">
-        <link rel='stylesheet' href='./pageroot/body/playerManager/leftPanel/songList/Song.css'>
+        <link rel='stylesheet' href='./pageroot/body/playerManager/songsPanel/songList/Song.css'>
 
-        <div part='artist'>
+        <div part='header' class='header'>
             <slot name='songArtist'></slot>
+            <input type='button' class='excludeSongButton included'>
         </div>
 
         <div part='title'>
@@ -91,8 +92,8 @@
 
     <script src="./pageroot/body/misc.js" charset="utf-8"></script>
     <script src="./modules/misc/ScrollableList.js" charset="utf-8"></script>
-    <script src="./pageroot/body/playerManager/leftPanel/songList/SongListContainer.js" charset="utf-8"></script>
-    <script src="./pageroot/body/playerManager/leftPanel/songList/Song.js" charset="utf-8"></script>
+    <script src="./pageroot/body/playerManager/songsPanel/songList/SongListContainer.js" charset="utf-8"></script>
+    <script src="./pageroot/body/playerManager/songsPanel/songList/Song.js" charset="utf-8"></script>
     <script src="./pageroot/body/playerManager/PlayerManager.js" charset="utf-8"></script>
     <script src="./pageroot/body/playerManager/player/Player.js" charset="utf-8"></script>
     <link rel='stylesheet' href='./style.css'>
@@ -110,7 +111,7 @@
         </div>
 
         <div id='playerManager' is='player-manager'>
-            <div id='leftPanel'>
+            <div id='songsPanel'>
                 <div id='songList' is="songlist-container">
                 </div>
 

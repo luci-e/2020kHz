@@ -2,8 +2,8 @@ class Song extends HTMLDivElement {
     songTemplate = window.document.getElementById('songTemplate');
     file;
     tag;
-    songTitle;
-    songArtist;
+    songTitle = 'NoTitle';
+    songArtist = 'NoArtist';
 
     constructor() {
         super();
@@ -12,7 +12,7 @@ class Song extends HTMLDivElement {
     connectedCallback() {
         this.attachShadow({ mode: 'open' });
         this.shadowRoot.append(this.songTemplate.content.cloneNode(true));
-        
+
         let songName = document.createElement("span")
         songName.slot = 'songName';
         songName.innerText = this.songTitle;
@@ -23,9 +23,30 @@ class Song extends HTMLDivElement {
         songArtist.slot = 'songArtist';
         songArtist.innerText = this.songArtist;
         this.appendChild(songArtist);
+
+        this.addEventListener('click', (event) => {
+            event.stopPropagation();
+            let sourceElement = event.path[0];
+            if (sourceElement.type == 'button') {
+                this.dispatchEvent(new CustomEvent('songExcludedEvent', {
+                    bubbles: true,
+                    detail: {
+                        song: this
+                    }
+                }));
+                $(sourceElement).toggleClass('included excluded');
+            } else {
+                this.dispatchEvent(new CustomEvent('songSelectedEvent', {
+                    bubbles: true,
+                    detail: {
+                        song: this
+                    }
+                }));
+            }
+        })
     }
 
-    init(){
+    init() {
         const formatter = {
             TIT2: (titleData) => {
                 this.songTitle = titleData.Data;

@@ -1,7 +1,7 @@
-:host{
+:host {
     height: 500px;
     width: 400px;
-    border-radius: 0 8px 8px 0;
+    /* border-radius: 0 8px 8px 0; */
     box-sizing: border-box;
     display: flex;
     flex-direction: column;
@@ -27,7 +27,7 @@
     transition: box-shadow .5s;
 }
 
-.controlButton:hover{
+.controlButton:hover {
     box-shadow: -2px 2px rgb(10 10 10 / 50%);
 }
 
@@ -60,16 +60,47 @@
     background-image: url(./next.png);
 }
 
-.playButton{
+.playButton {
     background-image: url(./play-button.png);
 }
 
-.pauseButton{
+.pauseButton {
     background-image: url(./pause-button.png);
 }
 
-@media (max-height: 500px) {
-    :host{
+@media (max-height: 700px) {
+    :host {
         height: 100%;
+    }
+
+    @media (max-height: 500px) {
+        [name='playingSongImage'] {
+            display: none;
+        }
+
+        @media (max-height: 330px) {
+            #turntable {
+                display: none;
+            }
+        }
+    }
+}
+
+@media (max-width: 700px), (orientation: portrait) {
+    :host {
+        height: 60%;
+        width: 100%;
+    }
+
+    @media (max-height: 800px) {
+        [name='playingSongImage'] {
+            display: none;
+        }
+
+        @media (max-height: 530px) {
+            #turntable {
+                display: none;
+            }
+        }
     }
 }

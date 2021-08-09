@@ -1,5 +1,6 @@
 class PlayerManager extends HTMLDivElement {
     playlist;
+    excludeset = new Set();
     currentPlayerMode;
     currentSongNo;
 
@@ -23,13 +24,12 @@ class PlayerManager extends HTMLDivElement {
             document.getElementById('uploadProbsButton').addEventListener('input', this.getProbabilitiesCallback.bind(this));
             document.getElementById('modeSwitchButton').addEventListener('click', this.cycleModeCallback.bind(this));
 
-
-
             this.songListContainer = document.getElementById('songList');
             this.player = document.getElementById('player');
         });
 
         this.addEventListener('songSelectedEvent', this.songSelectedCallback.bind(this));
+        this.addEventListener('songExcludedEvent', this.songExcludedCallback.bind(this));
 
         this.addEventListener('songEnded', (e) => {
             e.stopPropagation();
@@ -107,41 +107,55 @@ class PlayerManager extends HTMLDivElement {
     }
 
     selectPreviousSong() {
-        switch (this.currentPlayerMode) {
-            case 0:
-                this.sequentialPrevious();
-                break;
-            case 1:
-                this.shuffleNext();
-                break;
-            case 2:
-                this.fairshuffleNext();
-                break;
-            default:
-                break;
-        }
+        while (true) {
+            switch (this.currentPlayerMode) {
+                case 0:
+                    this.sequentialPrevious();
+                    break;
+                case 1:
+                    this.shuffleNext();
+                    break;
+                case 2:
+                    this.fairshuffleNext();
+                    break;
+                default:
+                    break;
+            }
 
-        let selectedSong = this.playlist[this.currentSongNo];
-        this.playSong(selectedSong);
+            let selectedSong = this.playlist[this.currentSongNo];
+
+            if (this.excludeset.has(selectedSong))
+                continue;
+
+            this.playSong(selectedSong);
+            break;
+        }
     }
 
     selectNextSong() {
-        switch (this.currentPlayerMode) {
-            case 0:
-                this.sequentialNext();
-                break;
-            case 1:
-                this.shuffleNext();
-                break;
-            case 2:
-                this.fairshuffleNext();
-                break;
-            default:
-                break;
-        }
+        while (true) {
+            switch (this.currentPlayerMode) {
+                case 0:
+                    this.sequentialNext();
+                    break;
+                case 1:
+                    this.shuffleNext();
+                    break;
+                case 2:
+                    this.fairshuffleNext();
+                    break;
+                default:
+                    break;
+            }
 
-        let selectedSong = this.playlist[this.currentSongNo];
-        this.playSong(selectedSong);
+            let selectedSong = this.playlist[this.currentSongNo];
+
+            if (this.excludeset.has(selectedSong))
+                continue;
+
+            this.playSong(selectedSong);
+            break;
+        }
     }
 
     cycleModeCallback() {
@@ -189,6 +203,15 @@ class PlayerManager extends HTMLDivElement {
     async songSelectedCallback(event) {
         this.currentSongNo = this.playlist.indexOf(event.detail.song);
         await this.playSong();
+    }
+
+    async songExcludedCallback(event) {
+        let excludedSong = event.detail.song;
+        if (this.excludeset.has(excludedSong)) {
+            this.excludeset.delete(excludedSong);
+        } else {
+            this.excludeset.add(excludedSong);
+        }
     }
 
     async playSong(song = this.playlist[this.currentSongNo]) {
