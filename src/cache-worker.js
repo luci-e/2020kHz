@@ -12,25 +12,27 @@
 */
 
 var cacheBaseName = 'theCache';
-var cacheVersion = 2;
+var cacheVersion = 3;
 
 var cacheName = `${cacheBaseName}_${cacheVersion}`;
+
+var expectedCaches = [cacheName];
 
 var urlsToCache = [
     './modules/misc/ID3.js',
     './modules/misc/PapaParse-5.0.2/papaparse.min.js',
     './modules/misc/ScrollableList.js',
 
-    './pageroot/body/playerManager/leftPanel/controlBar/arrow-right.png',
-    './pageroot/body/playerManager/leftPanel/controlBar/curve.png',
-    './pageroot/body/playerManager/leftPanel/controlBar/dice.png',
-    './pageroot/body/playerManager/leftPanel/controlBar/folder.png',
-    './pageroot/body/playerManager/leftPanel/controlBar/shuffle.png',
-    './pageroot/body/playerManager/leftPanel/controlBar/user.png',
+    './pageroot/body/playerManager/songsPanel/controlBar/arrow-right.png',
+    './pageroot/body/playerManager/songsPanel/controlBar/curve.png',
+    './pageroot/body/playerManager/songsPanel/controlBar/dice.png',
+    './pageroot/body/playerManager/songsPanel/controlBar/folder.png',
+    './pageroot/body/playerManager/songsPanel/controlBar/shuffle.png',
+    './pageroot/body/playerManager/songsPanel/controlBar/user.png',
 
-    './pageroot/body/playerManager/leftPanel/songList/Song.css',
-    './pageroot/body/playerManager/leftPanel/songList/Song.js',
-    './pageroot/body/playerManager/leftPanel/songList/SongListContainer.js',
+    './pageroot/body/playerManager/songsPanel/songList/Song.css',
+    './pageroot/body/playerManager/songsPanel/songList/Song.js',
+    './pageroot/body/playerManager/songsPanel/songList/SongListContainer.js',
 
     './pageroot/body/playerManager/player/back.png',
     './pageroot/body/playerManager/player/next.png',
@@ -61,6 +63,21 @@ self.addEventListener('install', function(event) {
     );
 });
 
+self.addEventListener('activate', event => {
+  // delete any caches that aren't in expectedCaches
+  // which will get rid of static-v1
+  event.waitUntil(
+    caches.keys().then(keys => Promise.all(
+      keys.map(key => {
+        if (!expectedCaches.includes(key)) {
+          return caches.delete(key);
+        }
+      })
+    )).then(() => {
+      console.log('Deleted a stale cache!');
+    })
+  );
+});
 
 self.addEventListener('fetch', function(event) {
     console.log('Handling fetch event for', event.request.url);
