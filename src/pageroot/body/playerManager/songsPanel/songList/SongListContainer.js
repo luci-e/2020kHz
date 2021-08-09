@@ -7,8 +7,9 @@ class SongListContainer extends ScrollableList {
         super.connectedCallback();
     }
 
-    addSongs(playlist) {
+    addSongs(playlist, excludelist = null) {
         let songList = [];
+        let excludeSet = new Set();
 
         for (let songObj of playlist) {
             let song = document.createElement("div", { is: 'song-item' });
@@ -32,8 +33,16 @@ class SongListContainer extends ScrollableList {
             return artistCompare;
         });
 
-        songList.forEach(song => this.appendChild(song));
-        return songList;
+        songList.forEach(song => {
+            this.appendChild(song);
+            let songId = `${song.songArtist} ${song.songTitle}`;
+            if( excludelist?.indexOf(songId) >= 0){
+                excludeSet.add(song);
+                song.exclude();
+            }
+        });
+        
+        return [songList, excludeSet];
     }
 }
 

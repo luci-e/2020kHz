@@ -212,6 +212,8 @@ class PlayerManager extends HTMLDivElement {
         } else {
             this.excludeset.add(excludedSong);
         }
+
+        window.localStorage.setItem('excludedSongs', JSON.stringify(Array.from(this.excludeset).map( song => {return `${song.songArtist} ${song.songTitle}`} )));
     }
 
     async playSong(song = this.playlist[this.currentSongNo]) {
@@ -267,7 +269,9 @@ class PlayerManager extends HTMLDivElement {
             currentChunk += 50;
         } while (currentChunk < songsNo)
 
-        this.playlist = this.songListContainer.addSongs(this.playlist);
+        let excludedSongs = JSON.parse( window.localStorage.getItem('excludedSongs') );
+
+        [this.playlist, this.excludeset] = this.songListContainer.addSongs(this.playlist, excludedSongs);
     }
 }
 

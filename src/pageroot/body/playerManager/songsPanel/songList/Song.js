@@ -71,6 +71,10 @@ class Song extends HTMLDivElement {
             formatter['NODATADEFAULT'](this.file.name);
         }
     }
+
+    exclude(){
+        $(this.shadowRoot.getElementById('excludeSongButton')).toggleClass('included excluded');
+    }
 }
 
 customElements.define('song-item', Song, { extends: "div" });
