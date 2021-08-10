@@ -10,6 +10,10 @@ class PlayerManager extends HTMLDivElement {
     currentPermutation = null;
     currentFairShuffleIndex;
 
+    history = new Array();
+    historyIndex = 0;
+    historySurfTimer;
+
     rng = new LCG();
 
     get playerMode() {
@@ -39,6 +43,11 @@ class PlayerManager extends HTMLDivElement {
             this.selectNextSong();
         });
 
+        this.addEventListener('previousInHistory', async (e) => {
+            e.stopPropagation();
+            this.selectPreviousInHistorySong();
+        });
+
         this.addEventListener('previousTrack', (e) => {
             e.stopPropagation();
             this.selectPreviousSong();
@@ -52,6 +61,16 @@ class PlayerManager extends HTMLDivElement {
         if ('mediaSession' in navigator) {
             navigator.mediaSession.setActionHandler('previoustrack', this.selectPreviousSong.bind(this));
             navigator.mediaSession.setActionHandler('nexttrack', this.selectNextSong.bind(this));
+        }
+    }
+
+    async selectPreviousInHistorySong(){
+        if(this.historyIndex > 0){
+            this.historyIndex -= 1;
+            this.currentSongNo = this.history[this.historyIndex];
+            await this.playSong();
+        }else{
+            console.log('No history left');
         }
     }
 
@@ -233,6 +252,22 @@ class PlayerManager extends HTMLDivElement {
 
     async playSong(song = this.playlist[this.currentSongNo]) {
         await this.player.playSong(song);
+
+        clearTimeout(this.historySurfTimer);
+
+        this.historySurfTimer = setTimeout( () => {
+            if(this.history.length > 0 && this.historyIndex != this.history.length -1){
+                this.history.splice(this.historyIndex, 1);
+            }
+
+            let duplicate = this.history.indexOf(this.currentSongNo);
+            if(duplicate >= 0 ){
+                this.history.splice(duplicate, 1);
+            }
+
+            this.history.push(this.currentSongNo);
+            this.historyIndex = this.history.length-1;
+        }, 1 * 1000 );
 
         if ('mediaSession' in navigator) {
             navigator.mediaSession.metadata = new MediaMetadata({

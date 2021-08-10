@@ -51,6 +51,13 @@ class Player extends HTMLDivElement {
 
             this.playingSong.addEventListener('timeupdate', this.updateTurntable.bind(this));
 
+            this.shadowRoot.getElementById('historyButton').addEventListener('click',
+                (event) => {
+                    event.stopPropagation();
+                    this.dispatchEvent(new Event('previousInHistory', { bubbles: true }));
+                }
+            );
+
             this.shadowRoot.getElementById('previousTrackButton').addEventListener('click',
                 (event) => {
                     event.stopPropagation();

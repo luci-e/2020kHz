@@ -52,6 +52,10 @@
     cursor: pointer;
 }
 
+#historyButton {
+    background-image: url(./history.png);
+}
+
 #previousTrackButton {
     background-image: url(./back.png);
 }
