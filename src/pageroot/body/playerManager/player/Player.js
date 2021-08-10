@@ -77,6 +77,7 @@ class Player extends HTMLDivElement {
             );
 
             this.turntable.addEventListener('mousedown', (event) => {
+                event.preventDefault();
                 this.movementInProgress = true;
                 this.lastRadians = this.getPointerRadians(event);
                 $(this.turntable).css('transition', 'transform 0s linear');
@@ -89,14 +90,12 @@ class Player extends HTMLDivElement {
 
             this.turntable.addEventListener('touchstart', (event) => {
                 event.preventDefault();
-                console.log('touchstart');
                 this.movementInProgress = true;
                 this.lastRadians = this.getPointerRadians(event);
                 $(this.turntable).css('transition', 'transform 0s linear');
             });
 
             document.addEventListener('touchend', () => {
-                console.log('touchend');
                 this.movementInProgress = false;
                 $(this.turntable).css('transition', 'transform .2s linear');
             });
@@ -172,6 +171,7 @@ class Player extends HTMLDivElement {
 
     async pointerMovement(event) {
         if (this.movementInProgress) {
+            event.preventDefault();
             let img = $(this.turntable);
             let radians = this.getPointerRadians(event);
 

@@ -2,10 +2,12 @@ class PlayerManager extends HTMLDivElement {
     playlist;
     excludeset = new Set();
     currentPlayerMode;
-    currentSongNo;
+    currentSongNo = 0;
+    currentPlayerMode = 0;
 
     probabilities = null;
     currentCumulative = null;
+    rng = new LCG();
 
     get playerMode() {
         const mode = ['sequential', 'shuffle', 'fairshuffle']
@@ -14,8 +16,6 @@ class PlayerManager extends HTMLDivElement {
 
     constructor() {
         super();
-        this.currentPlayerMode = 0;
-        this.currentSongNo = 0;
     }
 
     connectedCallback() {
@@ -61,7 +61,11 @@ class PlayerManager extends HTMLDivElement {
     }
 
     shuffleNext() {
-        this.currentSongNo = Math.floor(Math.random() * this.playlist.length);
+        this.currentSongNo = Math.floor(this.rng.nextFloat() * this.playlist.length);
+    }
+
+    shufflePrevious() {
+        this.currentSongNo = Math.floor(this.rng.previousFloat() * this.playlist.length);
     }
 
     fairshuffleNext() {
@@ -113,7 +117,7 @@ class PlayerManager extends HTMLDivElement {
                     this.sequentialPrevious();
                     break;
                 case 1:
-                    this.shuffleNext();
+                    this.shufflePrevious();
                     break;
                 case 2:
                     this.fairshuffleNext();
@@ -231,7 +235,6 @@ class PlayerManager extends HTMLDivElement {
     }
 
     async getFilesCallback(event) {
-        //console.dir(event.target.files);
         let audioFiles = Array.from(event.target.files).filter(file => file.type.startsWith('audio'));
         let songsNo = audioFiles.length;
         let currentChunk = 0;
@@ -247,7 +250,6 @@ class PlayerManager extends HTMLDivElement {
 
                     return header.arrayBuffer().then((buf) => {
                         let size = new DataView(buf).getUint32(6);
-                        //return audio.slice(0, 1048576).arrayBuffer();
                         return audio.slice(0, size + 10).arrayBuffer();
                     }).then((tagBuf) => {
                         let tag = ID3.Parse(tagBuf, false, 2);
