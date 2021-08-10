@@ -7,6 +7,9 @@ class PlayerManager extends HTMLDivElement {
 
     probabilities = null;
     currentCumulative = null;
+    currentPermutation = null;
+    currentFairShuffleIndex;
+
     rng = new LCG();
 
     get playerMode() {
@@ -69,45 +72,13 @@ class PlayerManager extends HTMLDivElement {
     }
 
     fairshuffleNext() {
-        let valid = this.probabilities ?? false;
+        this.currentFairShuffleIndex = (this.currentFairShuffleIndex + 1) % this.currentPermutation.length;
+        this.currentSongNo = this.currentPermutation[this.currentFairShuffleIndex];
+    }
 
-        if (valid) {
-            let cumulativeScore = this.currentCumulative[this.currentCumulative.length - 1][1];
-            let randSongVal = Math.random() * cumulativeScore;
-
-            let songIndex = this.currentCumulative.findIndex(([_, value]) => {
-                return value > randSongVal;
-            });
-
-            let songTitle = this.currentCumulative[songIndex][0];
-            let songScore = this.currentCumulative[songIndex][1] - (songIndex > 0 ? this.currentCumulative[songIndex - 1][1] : 0);
-
-            this.currentCumulative.splice(songIndex, 1);
-
-            for (let i = songIndex; i < this.currentCumulative.length; i++) {
-                this.currentCumulative[i][1] -= songScore;
-            }
-
-            if (this.currentCumulative.length == 0) {
-                this.computeCumulativeScore();
-            }
-
-            let matchSongTitle = (song) => {
-                return song.songTitle == songTitle;
-            }
-
-            let nextSongNo = this.playlist.findIndex(matchSongTitle);
-
-            if (nextSongNo >= 0) {
-                this.currentSongNo = nextSongNo;
-            } else {
-                this.shuffleNext();
-            }
-
-
-        } else {
-            this.shuffleNext();
-        }
+    fairshufflePrevious() {
+        this.currentFairShuffleIndex = (this.currentFairShuffleIndex - 1 + this.currentPermutation.length) % this.currentPermutation.length;
+        this.currentSongNo = this.currentPermutation[this.currentFairShuffleIndex];
     }
 
     selectPreviousSong() {
@@ -120,7 +91,7 @@ class PlayerManager extends HTMLDivElement {
                     this.shufflePrevious();
                     break;
                 case 2:
-                    this.fairshuffleNext();
+                    this.fairshufflePrevious();
                     break;
                 default:
                     break;
@@ -169,14 +140,54 @@ class PlayerManager extends HTMLDivElement {
         button.classList.toggle(this.playerMode[this.currentPlayerMode]);
     }
 
-    computeCumulativeScore() {
-        let cumulative = 0;
-        this.currentCumulative = this.probabilities.map(([title, score]) => {
-            let cumulativeScore = cumulative + score;
-            cumulative += score;
+    computeFairPermutation() {
+        let valid = this.probabilities ?? false;
 
-            return [title, cumulativeScore]
-        });
+        if (valid) {
+            this.currentFairShuffleIndex = 0;
+            this.currentPermutation = [];
+
+            let cumulative = 0;
+            this.currentCumulative = this.probabilities.map(([title, score]) => {
+                let cumulativeScore = cumulative + score;
+                cumulative += score;
+
+                return [title, cumulativeScore]
+            });
+
+            for (let remainingSongs = this.currentCumulative.length; remainingSongs > 0; remainingSongs--) {
+
+                let cumulativeScore = this.currentCumulative[this.currentCumulative.length - 1][1];
+                let randSongVal = Math.random() * cumulativeScore;
+
+                let songIndex = this.currentCumulative.findIndex(([_, value]) => {
+                    return value > randSongVal;
+                });
+
+                let songTitle = this.currentCumulative[songIndex][0];
+                let songScore = this.currentCumulative[songIndex][1] - (songIndex > 0 ? this.currentCumulative[songIndex - 1][1] : 0);
+
+                this.currentCumulative.splice(songIndex, 1);
+
+                for (let i = songIndex; i < this.currentCumulative.length; i++) {
+                    this.currentCumulative[i][1] -= songScore;
+                }
+
+                let matchSongTitle = (song) => {
+                    return song.songTitle == songTitle;
+                }
+
+                let nextSongNo = this.playlist.findIndex(matchSongTitle);
+
+                if (nextSongNo >= 0) {
+                    this.currentPermutation.push(nextSongNo);
+                } else {
+                    continue;
+                }
+            }
+        } else {
+            console.error('No valid probabilities table');
+        }
     }
 
     async getProbabilitiesCallback(event) {
@@ -187,19 +198,19 @@ class PlayerManager extends HTMLDivElement {
             complete: (results) => {
                 this.probabilities = results.data;
                 event.target.style.backgroundColor = 'lightgreen';
-                this.computeCumulativeScore();
+                this.computeFairPermutation();
 
-                for (let [title, _] of this.probabilities) {
-                    let matchSongTitle = (song) => {
-                        return song.songTitle == title;
-                    }
-
-                    let nextSongNo = this.playlist.findIndex(matchSongTitle);
-
-                    if (nextSongNo == -1) {
-                        console.warn(`Missing song: ${title}`)
-                    }
-                }
+                // for (let [title, _] of this.probabilities) {
+                //     let matchSongTitle = (song) => {
+                //         return song.songTitle == title;
+                //     }
+                //
+                //     let nextSongNo = this.playlist.findIndex(matchSongTitle);
+                //
+                //     if (nextSongNo == -1) {
+                //         console.warn(`Missing song: ${title}`)
+                //     }
+                // }
             }
         });
     }
@@ -217,7 +228,7 @@ class PlayerManager extends HTMLDivElement {
             this.excludeset.add(excludedSong);
         }
 
-        window.localStorage.setItem('excludedSongs', JSON.stringify(Array.from(this.excludeset).map( song => {return `${song.songArtist} ${song.songTitle}`} )));
+        window.localStorage.setItem('excludedSongs', JSON.stringify(Array.from(this.excludeset).map(song => { return `${song.songArtist} ${song.songTitle}` })));
     }
 
     async playSong(song = this.playlist[this.currentSongNo]) {
@@ -271,7 +282,7 @@ class PlayerManager extends HTMLDivElement {
             currentChunk += 50;
         } while (currentChunk < songsNo)
 
-        let excludedSongs = JSON.parse( window.localStorage.getItem('excludedSongs') );
+        let excludedSongs = JSON.parse(window.localStorage.getItem('excludedSongs'));
 
         [this.playlist, this.excludeset] = this.songListContainer.addSongs(this.playlist, excludedSongs);
     }

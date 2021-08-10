@@ -9,6 +9,7 @@ window.addEventListener('load', ()=>{
 
 })
 
+// Linear congruential generator
 class LCG{
     seed;
     current;
