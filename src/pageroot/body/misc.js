@@ -1,5 +1,5 @@
 window.addEventListener('load', ()=>{
-    $('#userSettingsButton').click(()=>{
+    $('#settingsButton').click(()=>{
         $('#centralContainer').toggleClass('rotate180');
     });
 

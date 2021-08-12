@@ -64,12 +64,12 @@ class PlayerManager extends HTMLDivElement {
         }
     }
 
-    async selectPreviousInHistorySong(){
-        if(this.historyIndex > 0){
+    async selectPreviousInHistorySong() {
+        if (this.historyIndex > 0) {
             this.historyIndex -= 1;
             this.currentSongNo = this.history[this.historyIndex];
             await this.playSong();
-        }else{
+        } else {
             console.log('No history left');
         }
     }
@@ -145,6 +145,9 @@ class PlayerManager extends HTMLDivElement {
             let selectedSong = this.playlist[this.currentSongNo];
 
             if (this.excludeset.has(selectedSong))
+                continue;
+
+            if(this.history.indexOf(this.currentSongNo) >= 0 )
                 continue;
 
             this.playSong(selectedSong);
@@ -255,19 +258,25 @@ class PlayerManager extends HTMLDivElement {
 
         clearTimeout(this.historySurfTimer);
 
-        this.historySurfTimer = setTimeout( () => {
-            if(this.history.length > 0 && this.historyIndex != this.history.length -1){
+        this.historySurfTimer = setTimeout(() => {
+            if (this.history.length > 0 && this.historyIndex != this.history.length - 1) {
                 this.history.splice(this.historyIndex, 1);
             }
 
             let duplicate = this.history.indexOf(this.currentSongNo);
-            if(duplicate >= 0 ){
+            if (duplicate >= 0) {
                 this.history.splice(duplicate, 1);
             }
 
             this.history.push(this.currentSongNo);
-            this.historyIndex = this.history.length-1;
-        }, 1 * 1000 );
+
+            window.localStorage.setItem('listenHistory', JSON.stringify(this.history.map(songIndex => {
+                let song = this.playlist[songIndex];
+                return `${song.songArtist} ${song.songTitle}`;
+            })));
+
+            this.historyIndex = this.history.length - 1;
+        }, 1 * 1000);
 
         if ('mediaSession' in navigator) {
             navigator.mediaSession.metadata = new MediaMetadata({
@@ -320,6 +329,17 @@ class PlayerManager extends HTMLDivElement {
         let excludedSongs = JSON.parse(window.localStorage.getItem('excludedSongs'));
 
         [this.playlist, this.excludeset] = this.songListContainer.addSongs(this.playlist, excludedSongs);
+
+        const matchSong = (songArtistTitle) => {
+            let songIndex = this.playlist.findIndex( (song) => {return `${song.songArtist} ${song.songTitle}` == songArtistTitle; } );
+
+            if(songIndex >= 0){
+                return songIndex;
+            }
+        };
+
+        this.history = JSON.parse(window.localStorage.getItem('listenHistory'))?.map(matchSong)??[];
+        this.historyIndex = Math.max( this.history.length - 1, 0);
     }
 }
 

@@ -113,7 +113,7 @@ body {
     transform: rotateY(180deg);
 }
 
-#userManager {
+#settingsManager {
     background: var(--color-user-manager);
     position: absolute;
     display: flex;
@@ -126,6 +126,20 @@ body {
     border-radius: 8px;
     backface-visibility: hidden;
     transform: rotateY(180deg) translateZ(-1px);
+}
+
+#indexPanel {
+    display: flex;
+    padding: 10px;
+    flex-direction: column;
+    box-sizing: border-box;
+    width: 200px;
+    height: 500px;
+    /* border-radius: 8px 0 0 8px; */
+}
+
+#playerViewButton{
+    background-image: url(./pageroot/body/settingsManager/indexPanel/controlBar/music-note.png);
 }
 
 #playerManager {
@@ -158,7 +172,7 @@ body {
     width: 100%;
 }
 
-#controlBar {
+.buttonsBar {
     height: 40px;
     margin-top: 10px;
     width: 100%;
@@ -178,7 +192,7 @@ body {
         height: 100%;
     }
 
-    #userManager {
+    #settingsManager {
         height: 100%;
     }
 
@@ -201,7 +215,7 @@ body {
         width: 100%;
     }
 
-    #userManager {
+    #settingsManager {
         height: 100%;
         width: 100%;
     }
@@ -213,8 +227,8 @@ body {
 }
 
 
-#userSettingsButton {
-    background-image: url(./pageroot/body/playerManager/songsPanel/controlBar/user.png);
+#settingsButton {
+    background-image: url(./pageroot/body/playerManager/songsPanel/controlBar/setting-lines.png);
 }
 
 #uploadFilesButton {
