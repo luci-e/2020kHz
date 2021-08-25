@@ -297,7 +297,7 @@ class PlayerManager extends HTMLDivElement {
 
         do {
             let currentMax = currentChunk + 50;
-            let audioFilesSlice = audioFiles.slice(currentChunk, currentMax + 1);
+            let audioFilesSlice = audioFiles.slice(currentChunk, currentMax);
 
             let playlistSlice = await Promise.all(audioFilesSlice.map(
                 async (audio) => {
