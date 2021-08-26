@@ -2,13 +2,13 @@
     "short_name": "2020kHz",
     "name": "2020kHz: a FOSS music player",
     "icons": [{
-        "src": "/humanHearing.webp",
+        "src": "./humanHearing.webp",
         "type": "image/webp",
         "sizes": "192x192"
     }],
-    "start_url": "/index.html",
+    "start_url": "./index.html",
     "background_color": "#3367D6",
     "display": "standalone",
-    "scope": "/",
+    "scope": "./",
     "theme_color": "#3367D6"
 }
