@@ -158,6 +158,10 @@ body:fullscreen{
     background-image: url(./pageroot/body/settingsManager/indexPanel/controlBar/music-note.png);
 }
 
+#clearHistoryButton{
+    background-image: url(./pageroot/body/settingsManager/indexPanel/controlBar/clearHistory.png);
+}
+
 #playerManager {
     background: var(--color-player);
     position: absolute;
@@ -178,7 +182,7 @@ body:fullscreen{
     padding: 10px;
     flex-direction: column;
     box-sizing: border-box;
-    width: 300px;
+    width: 302px;
     height: 500px;
     /* border-radius: 8px 0 0 8px; */
 }
@@ -255,6 +259,7 @@ body:fullscreen{
 #settingsButton {
     background-image: url(./pageroot/body/playerManager/songsPanel/controlBar/setting-lines.png);
 }
+
 
 #uploadFilesButton {
     background-image: url(./pageroot/body/playerManager/songsPanel/controlBar/folder.png);

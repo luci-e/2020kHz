@@ -9,6 +9,10 @@ class Song extends HTMLDivElement {
         super();
     }
 
+    get artistTitle(){
+        return `${this.songArtist} ${this.songTitle}`
+    }
+
     connectedCallback() {
         this.attachShadow({ mode: 'open' });
         this.shadowRoot.append(this.songTemplate.content.cloneNode(true));
@@ -27,7 +31,7 @@ class Song extends HTMLDivElement {
         this.addEventListener('click', (event) => {
             event.stopPropagation();
             let sourceElement = event.path[0];
-            if (sourceElement.type == 'button') {
+            if (sourceElement.id == 'excludeSongButton') {
                 this.dispatchEvent(new CustomEvent('songExcludedEvent', {
                     bubbles: true,
                     detail: {
@@ -35,7 +39,15 @@ class Song extends HTMLDivElement {
                     }
                 }));
                 $(sourceElement).toggleClass('included excluded');
-            } else {
+            } else if (sourceElement.id == 'listenHistoryButton') {
+                this.dispatchEvent(new CustomEvent('songListenedEvent', {
+                    bubbles: true,
+                    detail: {
+                        song: this
+                    }
+                }));
+                $(sourceElement).toggleClass('toListen listened');
+            }else {
                 this.dispatchEvent(new CustomEvent('songSelectedEvent', {
                     bubbles: true,
                     detail: {
@@ -74,6 +86,10 @@ class Song extends HTMLDivElement {
 
     exclude(){
         $(this.shadowRoot.getElementById('excludeSongButton')).toggleClass('included excluded');
+    }
+
+    toggleListenHistory(){
+        $(this.shadowRoot.getElementById('listenHistoryButton')).toggleClass('toListen listened');
     }
 }
 

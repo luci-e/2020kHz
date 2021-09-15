@@ -15,7 +15,14 @@
     align-content: center;
 }
 
-.excludeSongButton {
+.songArtist::slotted(*){
+
+/* position: relative; */
+
+max-width: 80%;
+}
+
+.songButton {
     height: 20px;
     width: 20px;
 }
@@ -27,5 +34,17 @@
     background-blend-mode: normal;
     background-image: url(./cross.png);
     background-repeat: no-repeat;
-    background-size: cover;
+    background-size: 80% 80%;
+    background-position: center;
+}
+
+.toListen{
+}
+
+.listened{
+    background-blend-mode: normal;
+    background-image: url(./history.png);
+    background-repeat: no-repeat;
+    background-size: 80% 80%;
+    background-position: center;
 }

@@ -23,8 +23,11 @@
         <link rel='stylesheet' href='./pageroot/body/playerManager/songsPanel/songList/Song.css'>
 
         <div part='header' class='header'>
-            <slot name='songArtist'></slot>
-            <input type='button' id='excludeSongButton' class='excludeSongButton included'>
+            <slot name='songArtist' class='songArtist'></slot>
+            <div class='buttons'>
+                <input type='button' id='listenHistoryButton' class='songButton toListen'>
+                <input type='button' id='excludeSongButton' class='songButton included'>
+            </div>
         </div>
 
         <div part='title'>
@@ -118,6 +121,7 @@
 
                 <div class='buttonsBar'>
                     <input type='button' class='controlButton' id='playerViewButton'>
+                    <input type='button' class='controlButton' id='clearHistoryButton'>
                 </div>
             </div>
         </div>

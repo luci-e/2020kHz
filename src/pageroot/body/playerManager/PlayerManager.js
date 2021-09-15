@@ -31,12 +31,16 @@ class PlayerManager extends HTMLDivElement {
             document.getElementById('uploadProbsButton').addEventListener('input', this.getProbabilitiesCallback.bind(this));
             document.getElementById('modeSwitchButton').addEventListener('click', this.cycleModeCallback.bind(this));
 
+            // TODO OH GOD REMOVE
+            $('#clearHistoryButton').click(this.clearHistory.bind(this));
+
             this.songListContainer = document.getElementById('songList');
             this.player = document.getElementById('player');
         });
 
         this.addEventListener('songSelectedEvent', this.songSelectedCallback.bind(this));
         this.addEventListener('songExcludedEvent', this.songExcludedCallback.bind(this));
+        this.addEventListener('songListenedEvent', this.songListenedCallback.bind(this));
 
         this.addEventListener('songEnded', (e) => {
             e.stopPropagation();
@@ -147,7 +151,7 @@ class PlayerManager extends HTMLDivElement {
             if (this.excludeset.has(selectedSong))
                 continue;
 
-            if(this.history.indexOf(this.currentSongNo) >= 0 )
+            if (this.history.indexOf(this.currentSongNo) >= 0)
                 continue;
 
             this.playSong(selectedSong);
@@ -237,6 +241,48 @@ class PlayerManager extends HTMLDivElement {
         });
     }
 
+    clearHistory() {
+        for (let songIndex of this.history) {
+            let s = this.playlist[songIndex];
+            s.toggleListenHistory();
+        }
+        this.history = [];
+        this.historyIndex = 0;
+
+        window.localStorage.setItem('listenHistory', JSON.stringify([]));
+    }
+
+    // TODO change history to strings not ints
+    addSongToHistory(song, remove = false) {
+        if (this.history.length > 0 && this.historyIndex != this.history.length - 1) {
+            this.history.splice(this.historyIndex, 1);
+        }
+
+        let songIndex = this.playlist.findIndex((s) => { return `${s.songArtist} ${s.songTitle}` == song.artistTitle; });
+
+        let duplicate = this.history.indexOf(songIndex);
+        if (duplicate >= 0) {
+            this.history.splice(duplicate, 1);
+        } else {
+            song.toggleListenHistory();
+        }
+
+        if (!remove) {
+            this.history.push(songIndex);
+        }
+
+        window.localStorage.setItem('listenHistory', JSON.stringify(this.history.map(index => {
+            let song = this.playlist[index];
+            return `${song.songArtist} ${song.songTitle}`;
+        })));
+
+        this.historyIndex = this.history.length - 1;
+    }
+
+    async songListenedCallback(event) {
+        this.addSongToHistory(event.detail.song, true);
+    }
+
     async songSelectedCallback(event) {
         this.currentSongNo = this.playlist.indexOf(event.detail.song);
         await this.playSong();
@@ -259,23 +305,7 @@ class PlayerManager extends HTMLDivElement {
         clearTimeout(this.historySurfTimer);
 
         this.historySurfTimer = setTimeout(() => {
-            if (this.history.length > 0 && this.historyIndex != this.history.length - 1) {
-                this.history.splice(this.historyIndex, 1);
-            }
-
-            let duplicate = this.history.indexOf(this.currentSongNo);
-            if (duplicate >= 0) {
-                this.history.splice(duplicate, 1);
-            }
-
-            this.history.push(this.currentSongNo);
-
-            window.localStorage.setItem('listenHistory', JSON.stringify(this.history.map(songIndex => {
-                let song = this.playlist[songIndex];
-                return `${song.songArtist} ${song.songTitle}`;
-            })));
-
-            this.historyIndex = this.history.length - 1;
+            this.addSongToHistory(song);
         }, 1 * 1000);
 
         if ('mediaSession' in navigator) {
@@ -327,19 +357,20 @@ class PlayerManager extends HTMLDivElement {
         } while (currentChunk < songsNo)
 
         let excludedSongs = JSON.parse(window.localStorage.getItem('excludedSongs'));
+        let listenedSongs = JSON.parse(window.localStorage.getItem('listenHistory'));
 
-        [this.playlist, this.excludeset] = this.songListContainer.addSongs(this.playlist, excludedSongs);
+        [this.playlist, this.excludeset] = this.songListContainer.addSongs(this.playlist, excludedSongs, listenedSongs);
 
         const matchSong = (songArtistTitle) => {
-            let songIndex = this.playlist.findIndex( (song) => {return `${song.songArtist} ${song.songTitle}` == songArtistTitle; } );
+            let songIndex = this.playlist.findIndex((song) => { return `${song.songArtist} ${song.songTitle}` == songArtistTitle; });
 
-            if(songIndex >= 0){
+            if (songIndex >= 0) {
                 return songIndex;
             }
         };
 
-        this.history = JSON.parse(window.localStorage.getItem('listenHistory'))?.map(matchSong)??[];
-        this.historyIndex = Math.max( this.history.length - 1, 0);
+        this.history = JSON.parse(window.localStorage.getItem('listenHistory')) ?.map(matchSong) ?? [];
+        this.historyIndex = Math.max(this.history.length - 1, 0);
     }
 }
 
