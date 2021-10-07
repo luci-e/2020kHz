@@ -68,10 +68,20 @@ class PlayerManager extends HTMLDivElement {
         }
     }
 
+    getSongIndex(songArtistTitle){
+        let songIndex = this.playlist.findIndex((song) => { return `${song.songArtist} ${song.songTitle}` == songArtistTitle; });
+
+        if (songIndex >= 0) {
+            return songIndex;
+        }
+
+        return
+      }
+
     async selectPreviousInHistorySong() {
         if (this.historyIndex > 0) {
             this.historyIndex -= 1;
-            this.currentSongNo = this.history[this.historyIndex];
+            this.currentSongNo = getSongIndex(this.history[this.historyIndex]);
             await this.playSong();
         } else {
             console.log('No history left');
@@ -242,25 +252,22 @@ class PlayerManager extends HTMLDivElement {
     }
 
     clearHistory() {
-        for (let songIndex of this.history) {
-            let s = this.playlist[songIndex];
+        for (let s of this.history) {
             s.toggleListenHistory();
         }
+
         this.history = [];
         this.historyIndex = 0;
 
         window.localStorage.setItem('listenHistory', JSON.stringify([]));
     }
 
-    // TODO change history to strings not ints
     addSongToHistory(song, remove = false) {
         if (this.history.length > 0 && this.historyIndex != this.history.length - 1) {
             this.history.splice(this.historyIndex, 1);
         }
 
-        let songIndex = this.playlist.findIndex((s) => { return `${s.songArtist} ${s.songTitle}` == song.artistTitle; });
-
-        let duplicate = this.history.indexOf(songIndex);
+        let duplicate = this.history.indexOf(song);
         if (duplicate >= 0) {
             this.history.splice(duplicate, 1);
         } else {
@@ -268,13 +275,10 @@ class PlayerManager extends HTMLDivElement {
         }
 
         if (!remove) {
-            this.history.push(songIndex);
+            this.history.push(song);
         }
 
-        window.localStorage.setItem('listenHistory', JSON.stringify(this.history.map(index => {
-            let song = this.playlist[index];
-            return `${song.songArtist} ${song.songTitle}`;
-        })));
+        window.localStorage.setItem('listenHistory', JSON.stringify(this.history.map( s => s.artistTitle )));
 
         this.historyIndex = this.history.length - 1;
     }
@@ -340,7 +344,7 @@ class PlayerManager extends HTMLDivElement {
                         let tag = ID3.Parse(tagBuf, false, 2);
                         let framesDict = {};
 
-                        tag.Frames.forEach((frame, i) => {
+                        tag.Frames.forEach((frame, _) => {
                             framesDict[frame.ID] = frame;
                         });
 
@@ -359,17 +363,8 @@ class PlayerManager extends HTMLDivElement {
         let excludedSongs = JSON.parse(window.localStorage.getItem('excludedSongs'));
         let listenedSongs = JSON.parse(window.localStorage.getItem('listenHistory'));
 
-        [this.playlist, this.excludeset] = this.songListContainer.addSongs(this.playlist, excludedSongs, listenedSongs);
+        [this.playlist, this.excludeset, this.history] = this.songListContainer.addSongs(this.playlist, excludedSongs, listenedSongs);
 
-        const matchSong = (songArtistTitle) => {
-            let songIndex = this.playlist.findIndex((song) => { return `${song.songArtist} ${song.songTitle}` == songArtistTitle; });
-
-            if (songIndex >= 0) {
-                return songIndex;
-            }
-        };
-
-        this.history = JSON.parse(window.localStorage.getItem('listenHistory')) ?.map(matchSong) ?? [];
         this.historyIndex = Math.max(this.history.length - 1, 0);
     }
 }

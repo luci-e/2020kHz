@@ -9,6 +9,7 @@ class SongListContainer extends ScrollableList {
 
     addSongs(playlist, excludelist = null, listenedlist = null) {
         let songList = [];
+        let history = [];
         let excludeSet = new Set();
 
         for (let songObj of playlist) {
@@ -43,10 +44,11 @@ class SongListContainer extends ScrollableList {
 
             if (listenedlist ?.indexOf(songId) >= 0) {
                 song.toggleListenHistory();
+                history.push(song);
             }
         });
 
-        return [songList, excludeSet];
+        return [songList, excludeSet, history];
     }
 }
 
