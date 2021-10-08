@@ -2,153 +2,164 @@
 <html lang="en" dir="ltr" data-user-theme='false' style='height:100%; width:100%'>
 
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width" />
-    <!-- <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" /> -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width" />
+  <!-- <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" /> -->
 
-    <!-- Hic sunt preloads -->
+  <!-- Hic sunt preloads -->
 
-    <link rel='preload' href='./style.css' as='style'>
-    <link rel='preload' href='./pageroot/body/playerManager/player/vynil.png' as='image'>
-    <link rel='preload' href='./pageroot/body/playerManager/player/Player.css' as='style'>
+  <link rel='preload' href='./style.css' as='style'>
+  <link rel='preload' href='./pageroot/body/playerManager/player/vynil.png' as='image'>
+  <link rel='preload' href='./pageroot/body/playerManager/player/Player.css' as='style'>
 
-    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+  <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
 
-    <link rel="manifest" href="./2020kHz.webmanifest">
-    <link rel='stylesheet' href='./style.css'>
+  <link rel="manifest" href="./2020kHz.webmanifest">
+  <link rel='stylesheet' href='./style.css'>
 
-    <!-- Hic sunt templates -->
+  <!-- Hic sunt templates -->
 
-    <template id="songTemplate">
-        <link rel='stylesheet' href='./pageroot/body/playerManager/songsPanel/songList/Song.css'>
+  <template id="songTemplate">
+    <link rel='stylesheet' href='./pageroot/body/playerManager/songsPanel/songList/Song.css'>
 
-        <div part='header' class='header'>
-            <slot name='songArtist' class='songArtist'></slot>
-            <div class='buttons'>
-                <input type='button' id='listenHistoryButton' class='songButton toListen'>
-                <input type='button' id='excludeSongButton' class='songButton included'>
-            </div>
-        </div>
+    <div part='header' class='header'>
+      <slot name='songArtist' class='songArtist'></slot>
+      <div class='buttons'>
+        <input type='button' id='listenHistoryButton' class='songButton toListen'>
+        <input type='button' id='excludeSongButton' class='songButton included'>
+      </div>
+    </div>
 
-        <div part='title'>
-            <slot name="songName"></slot>
-        </div>
-    </template>
+    <div part='title'>
+      <slot name="songName"></slot>
+    </div>
+  </template>
 
-    <template id="scrollableListTemplate">
-        <style>
-            :host {
-                height: 100%;
-                width: 100%;
-                box-sizing: border-box;
-                display: flex;
-                flex-direction: column;
-                flex-wrap: nowrap;
-                align-items: flex-start;
-                overflow-y: scroll;
-                overflow-x: hidden;
-            }
-        </style>
+  <template id="scrollableListTemplate">
+    <style>
+      :host {
+        height: 100%;
+        width: 100%;
+        box-sizing: border-box;
+        display: flex;
+        flex-direction: column;
+        flex-wrap: nowrap;
+        align-items: flex-start;
+        overflow-y: scroll;
+        overflow-x: hidden;
+      }
+    </style>
 
-        <slot name="element"></slot>
+    <slot name="element"></slot>
 
-    </template>
+  </template>
 
-    <template id="playerTemplate">
-        <link rel='stylesheet' href='./pageroot/body/playerManager/player/Player.css'>
+  <template id="playerTemplate">
+    <link rel='stylesheet' href='./pageroot/body/playerManager/player/Player.css'>
 
-        <slot part='playingSongImage' name='playingSongImage'></slot>
+    <slot part='playingSongImage' name='playingSongImage'></slot>
 
-        <div>
-            <slot name='playingSongArtist'></slot> -
-            <slot name='playingSongTitle'></slot>
-        </div>
+    <div>
+      <slot name='playingSongArtist'></slot> -
+      <slot name='playingSongTitle'></slot>
+    </div>
 
-        <div part='turntable' id='turntable'>
-        </div>
+    <div part='turntable' id='turntable'>
+    </div>
 
-        <slot name='playingSong'></slot>
+    <slot name='playingSong'></slot>
 
-        <div part='audioControls' id='audioControls'>
-            <input type='button' class='controlButton' id='historyButton'>
-            <input type='button' class='controlButton' id='previousTrackButton'>
-            <input type='button' class='controlButton playButton' id='playPauseButton'>
-            <input type='button' class='controlButton' id='nextTrackButton'>
-        </div>
+    <div part='audioControls' id='audioControls'>
+      <input type='button' class='controlButton' id='historyButton'>
+      <input type='button' class='controlButton' id='previousTrackButton'>
+      <input type='button' class='controlButton playButton' id='playPauseButton'>
+      <input type='button' class='controlButton' id='nextTrackButton'>
+    </div>
 
-    </template>
+  </template>
 
-    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+  <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
 
-    <script>
-        if ('serviceWorker' in navigator) {
-            console.log('Registering service worker');
-            navigator.serviceWorker.register('./cache-worker.js').then(function() {
-                if (navigator.serviceWorker.controller) {
-                    console.log('Service worker is active');
-                } else {
-                    console.log('Reload the page');
-                }
-            }).catch(function(error) {
-                console.error('Something went wrong during registration');
-                console.error(error);
-            });
+  <script>
+    if ('serviceWorker' in navigator) {
+      console.log('Registering service worker');
+      navigator.serviceWorker.register('./cache-worker.js').then(function() {
+        if (navigator.serviceWorker.controller) {
+          console.log('Service worker is active');
+        } else {
+          console.log('Reload the page');
         }
-    </script>
+      }).catch(function(error) {
+        console.error('Something went wrong during registration');
+        console.error(error);
+      });
+    }
+  </script>
 
-    <script src="https://code.jquery.com/jquery-3.6.0.slim.min.js" integrity="sha256-u7e5khyithlIdTpu22PHhENmPcRdFiHRjhAuHcs05RI=" crossorigin="anonymous" defer></script>
-    <script src="./modules/misc/ID3.js" charset="utf-8" defer></script>
-    <script src="./modules/misc/PapaParse-5.0.2/papaparse.min.js" charset="utf-8" defer></script>
+  <script src="https://code.jquery.com/jquery-3.6.0.slim.min.js" integrity="sha256-u7e5khyithlIdTpu22PHhENmPcRdFiHRjhAuHcs05RI=" crossorigin="anonymous" defer></script>
+  <script src="./modules/misc/ID3.js" charset="utf-8" defer></script>
+  <script src="./modules/misc/PapaParse-5.0.2/papaparse.min.js" charset="utf-8" defer></script>
 
 
-    <script src="./pageroot/body/misc.js" charset="utf-8"></script>
-    <script src="./modules/misc/ScrollableList.js" charset="utf-8"></script>
-    <script src="./pageroot/body/playerManager/songsPanel/songList/SongListContainer.js" charset="utf-8"></script>
-    <script src="./pageroot/body/playerManager/songsPanel/songList/Song.js" charset="utf-8"></script>
-    <script src="./pageroot/body/playerManager/PlayerManager.js" charset="utf-8"></script>
-    <script src="./pageroot/body/playerManager/player/Player.js" charset="utf-8"></script>
+  <script src="./pageroot/body/misc.js" charset="utf-8"></script>
+  <script src="./modules/misc/ScrollableList.js" charset="utf-8"></script>
+  <script src="./pageroot/body/playerManager/songsPanel/songList/SongListContainer.js" charset="utf-8"></script>
+  <script src="./pageroot/body/playerManager/songsPanel/songList/Song.js" charset="utf-8"></script>
+  <script src="./pageroot/body/playerManager/PlayerManager.js" charset="utf-8"></script>
+  <script src="./pageroot/body/playerManager/player/Player.js" charset="utf-8"></script>
 
-    <title>2020kHz</title>
+  <title>2020kHz</title>
 
 </head>
 
 <body>
 
-    <div id='centralContainer'>
+  <div id='centralContainer'>
 
-        <div id='settingsManager'>
-            <div id='indexPanel'>
+    <div id='settingsManager'>
+      <div id='indexPanel'>
 
-                <div class='buttonsBar'>
-                    <input type='button' class='controlButton' id='playerViewButton'>
-                    <input type='button' class='controlButton' id='clearHistoryButton'>
-                </div>
-            </div>
+        <div class='buttonsBar'>
+          <input type='button' class='controlButton' id='playerViewButton'>
+          <input type='button' class='controlButton' id='clearHistoryButton'>
         </div>
-
-        <div id='playerManager' is='player-manager'>
-            <div id='songsPanel'>
-                <div id='songList' is="songlist-container">
-                </div>
-
-                <div id='controlBar' class='buttonsBar'>
-                    <input type='button' class='controlButton' id='settingsButton'>
-                    <input type='file' class='controlButton' id='uploadFilesButton' accept='audio/*' multiple>
-                    <input type='file' class='controlButton' id='uploadProbsButton' accept='.csv'>
-                    <input type='button' class='controlButton sequential' id='modeSwitchButton'>
-                </div>
-            </div>
-
-
-            <div id='player' is='player-panel'>
-                <img id='playingSongImage' slot='playingSongImage'>
-                <span id='playingSongArtist' slot='playingSongArtist'>Artist</span>
-                <span id='playingSongTitle' slot='playingSongTitle'>Title</span>
-                <audio id='playingSong' preload="auto" controls slot='playingSong'></audio>
-            </div>
-
-        </div>
+      </div>
     </div>
+
+    <div id='playerManager' is='player-manager'>
+      <div id='songsPanel'>
+        <div id='songList' is="songlist-container">
+        </div>
+
+        <div id='sortingMenu' style='display:none'>
+          <div name='sortByArtistAscending' class='sortingOption'>Sort by Artist ⬆️</div>
+          <hr class='sortDivider'>
+          <div name='sortByArtistDescending' class='sortingOption'>Sort by Artist ⬇️</div>
+          <hr class='sortDivider'>
+          <div name='sortByTitleAscending' class='sortingOption'>Sort by Title ⬆️</div>
+          <hr class='sortDivider'>
+          <div name='sortByTitleDescending' class='sortingOption'>Sort by Title ⬇️</div>
+        </div>
+
+        <div id='controlBar' class='buttonsBar'>
+          <input type='button' class='controlButton' id='settingsButton'>
+          <input type='file' class='controlButton fileUploadComplete' id='uploadFilesButton' accept='audio/*' multiple>
+          <input type='file' class='controlButton' id='uploadProbsButton' accept='.csv'>
+          <input type='button' class='controlButton sequential' id='modeSwitchButton'>
+          <input type='button' class='controlButton' id='sortButton'>
+        </div>
+      </div>
+
+
+      <div id='player' is='player-panel'>
+        <img id='playingSongImage' slot='playingSongImage'>
+        <span id='playingSongArtist' slot='playingSongArtist'>Artist</span>
+        <span id='playingSongTitle' slot='playingSongTitle'>Title</span>
+        <audio id='playingSong' preload="auto" controls slot='playingSong'></audio>
+      </div>
+
+    </div>
+  </div>
 
 </body>
 
