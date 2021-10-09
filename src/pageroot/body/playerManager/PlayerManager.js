@@ -4,6 +4,7 @@ class PlayerManager extends HTMLDivElement {
   currentPlayerMode;
   currentSongNo = 0;
   currentPlayerMode = 0;
+  playingSong = null;
 
   probabilities = null;
   currentCumulative = null;
@@ -31,8 +32,8 @@ class PlayerManager extends HTMLDivElement {
       document.getElementById('uploadProbsButton').addEventListener('input', this.getProbabilitiesCallback.bind(this));
       document.getElementById('modeSwitchButton').addEventListener('click', this.cycleModeCallback.bind(this));
       document.getElementById('sortButton').addEventListener('click', this.toggleSortingMenu.bind(this));
-      document.querySelectorAll('.sortingOption').forEach(item => {
-        item.addEventListener('click', this.sortSongs.bind(this));
+      document.querySelectorAll('.sortingButton').forEach(item => {
+        item.addEventListener('click', this.sortSongsCallback.bind(this));
       })
 
       // TODO OH GOD REMOVE
@@ -112,12 +113,12 @@ class PlayerManager extends HTMLDivElement {
 
   fairshuffleNext() {
     this.currentFairShuffleIndex = (this.currentFairShuffleIndex + 1) % this.currentPermutation.length;
-    this.currentSongNo = this.currentPermutation[this.currentFairShuffleIndex];
+    this.currentSongNo = getSongIndex(this.currentPermutation[this.currentFairShuffleIndex]);
   }
 
   fairshufflePrevious() {
     this.currentFairShuffleIndex = (this.currentFairShuffleIndex - 1 + this.currentPermutation.length) % this.currentPermutation.length;
-    this.currentSongNo = this.currentPermutation[this.currentFairShuffleIndex];
+    this.currentSongNo = getSongIndex(this.currentPermutation[this.currentFairShuffleIndex]);
   }
 
   selectPreviousSong() {
@@ -219,13 +220,15 @@ class PlayerManager extends HTMLDivElement {
           return song.songTitle == songTitle;
         }
 
-        let nextSongNo = this.playlist.findIndex(matchSongTitle);
+        let nextSong = this.playlist.find(matchSongTitle);
+        nextSong.score = songScore;
 
-        if (nextSongNo >= 0) {
-          this.currentPermutation.push(nextSongNo);
+        if (nextSong) {
+          this.currentPermutation.push(nextSong);
         } else {
           continue;
         }
+
       }
     } else {
       console.error('No valid probabilities table');
@@ -274,6 +277,7 @@ class PlayerManager extends HTMLDivElement {
     }
 
     let duplicate = this.history.indexOf(song);
+
     if (duplicate >= 0) {
       this.history.splice(duplicate, 1);
     } else {
@@ -305,6 +309,8 @@ class PlayerManager extends HTMLDivElement {
     } else {
       this.excludeset.add(excludedSong);
     }
+
+    excludedSong.toggleExclude();
 
     window.localStorage.setItem('excludedSongs', JSON.stringify(Array.from(this.excludeset).map(song => {
       return `${song.songArtist} ${song.songTitle}`
@@ -381,6 +387,8 @@ class PlayerManager extends HTMLDivElement {
 
     this.historyIndex = Math.max(this.history.length - 1, 0);
 
+    this.sortSongs('sortByArtistAscending');
+
     document.getElementById('uploadFilesButton').classList.replace('fileUploadInProgress', 'fileUploadComplete');
   }
 
@@ -404,7 +412,7 @@ class PlayerManager extends HTMLDivElement {
     });
   }
 
-  sortSongs(sortingOption) {
+  sortSongs(optionName) {
     const sortChildren = (
       container,
       childSelector,
@@ -421,10 +429,8 @@ class PlayerManager extends HTMLDivElement {
       container.appendChild(docFragment);
     };
 
-    let option = sortingOption.target;
-    let optionName = option.getAttribute('name');
 
-    let sortingFunction;
+    let sortingFunction = null;
 
     switch (optionName) {
       case 'sortByArtistAscending':
@@ -447,9 +453,35 @@ class PlayerManager extends HTMLDivElement {
           return -1 * song1.songTitle.localeCompare(song2.songTitle);
         };
         break;
+      case 'sortByVoteAscending':
+        if (this.probabilities) {
+          console.log('h');
+          sortingFunction = (song1, song2) => {
+            return Math.sign(song1.score - song2.score);
+          };
+        }
+        break;
+      case 'sortByVoteDescending':
+        if (this.probabilities) {
+          sortingFunction = (song1, song2) => {
+            return -1 * Math.sign(song1.score - song2.score);
+          };
+        }
+        break;
     }
 
-    sortChildren(this.songListContainer, '[is="song-item"]', sortingFunction);
+    if (sortingFunction) {
+      sortChildren(this.songListContainer, '[is="song-item"]', sortingFunction);
+      this.playlist = [...(this.songListContainer.querySelectorAll('[is="song-item"]'))];
+    }
+
+  }
+
+  sortSongsCallback(sortingOption) {
+    let option = sortingOption.target;
+    let optionName = option.getAttribute('name');
+
+    this.sortSongs(optionName);
   }
 
 }

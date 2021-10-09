@@ -299,8 +299,8 @@ body:fullscreen {
 #sortingMenu {
   position: fixed;
   /* visibility: hidden; */
-  height: 128px;
-  width: 162px;
+  height: 98px;
+  width: 191px;
   box-sizing: border-box;
   /* border: 1px solid; */
   border-radius: 10px;
@@ -313,7 +313,7 @@ body:fullscreen {
   z-index: 99999;
 }
 
-.sortingOption {
+.sortingOptions {
   height: 25px;
   width: 90%;
   text-align: justify;
@@ -322,6 +322,8 @@ body:fullscreen {
   font-family: system-ui;
   cursor: pointer;
 }
+
+.sortingButton{border: none;height: 25px;width: 25px;cursor: pointer;display: inline-block;text-decoration: none;background: transparent;line-height: 1;padding: 0;text-align: center;}
 
 .sortDivider {
   margin: 1px 0 1px 0;

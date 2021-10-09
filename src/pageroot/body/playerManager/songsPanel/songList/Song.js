@@ -4,6 +4,7 @@ class Song extends HTMLDivElement {
   tag;
   songTitle = 'NoTitle';
   songArtist = 'NoArtist';
+  score = 0;
   attached = false;
 
   constructor() {
@@ -44,7 +45,6 @@ class Song extends HTMLDivElement {
             song: this
           }
         }));
-        $(sourceElement).toggleClass('included excluded');
       } else if (sourceElement.id == 'listenHistoryButton') {
         this.dispatchEvent(new CustomEvent('songListenedEvent', {
           bubbles: true,
@@ -52,7 +52,6 @@ class Song extends HTMLDivElement {
             song: this
           }
         }));
-        $(sourceElement).toggleClass('toListen listened');
       } else {
         this.dispatchEvent(new CustomEvent('songSelectedEvent', {
           bubbles: true,
@@ -90,7 +89,7 @@ class Song extends HTMLDivElement {
     }
   }
 
-  exclude() {
+  toggleExclude() {
     $(this.shadowRoot.getElementById('excludeSongButton')).toggleClass('included excluded');
   }
 

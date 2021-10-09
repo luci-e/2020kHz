@@ -24,22 +24,12 @@ class SongListContainer extends ScrollableList {
             songList.push(song);
         }
 
-        songList = songList.sort((first, second) => {
-            let artistCompare = first.songArtist.localeCompare(second.songArtist);
-
-            if (artistCompare == 0) {
-                return first.songTitle.localeCompare(second.songTitle);
-            }
-
-            return artistCompare;
-        });
-
         songList.forEach(song => {
             this.appendChild(song);
             let songId = song.artistTitle;
             if (excludelist ?.indexOf(songId) >= 0) {
                 excludeSet.add(song);
-                song.exclude();
+                song.toggleExclude();
             }
 
             if (listenedlist ?.indexOf(songId) >= 0) {
