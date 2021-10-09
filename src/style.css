@@ -311,6 +311,7 @@ body:fullscreen {
   align-items: center;
   background: var(--color-sorting-menu);
   z-index: 99999;
+  box-shadow: -3px 3px 2px 0px rgb(10 10 10 / 50%);
 }
 
 .sortingOptions {

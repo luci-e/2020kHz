@@ -435,13 +435,26 @@ class PlayerManager extends HTMLDivElement {
     switch (optionName) {
       case 'sortByArtistAscending':
         sortingFunction = (song1, song2) => {
-          return song1.songArtist.localeCompare(song2.songArtist);
+          let artistCompare = song1.songArtist.localeCompare(song2.songArtist);
+
+          if (artistCompare == 0) {
+              return song1.songTitle.localeCompare(song2.songTitle);
+          }
+
+          return artistCompare;
         };
         break;
       case 'sortByArtistDescending':
         sortingFunction = (song1, song2) => {
-          return -1 * song1.songArtist.localeCompare(song2.songArtist);
+          let artistCompare = song1.songArtist.localeCompare(song2.songArtist);
+
+          if (artistCompare == 0) {
+              return song1.songTitle.localeCompare(song2.songTitle);
+          }
+
+          return -1 * artistCompare;
         };
+
         break;
       case 'sortByTitleAscending':
         sortingFunction = (song1, song2) => {
