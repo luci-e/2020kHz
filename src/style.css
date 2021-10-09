@@ -310,6 +310,7 @@ body:fullscreen {
   justify-content: center;
   align-items: center;
   background: var(--color-sorting-menu);
+  z-index: 99999;
 }
 
 .sortingOption {
