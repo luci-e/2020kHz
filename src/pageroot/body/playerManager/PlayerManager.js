@@ -113,12 +113,12 @@ class PlayerManager extends HTMLDivElement {
 
   fairshuffleNext() {
     this.currentFairShuffleIndex = (this.currentFairShuffleIndex + 1) % this.currentPermutation.length;
-    this.currentSongNo = getSongIndex(this.currentPermutation[this.currentFairShuffleIndex]);
+    this.currentSongNo = this.getSongIndex(this.currentPermutation[this.currentFairShuffleIndex].artistTitle);
   }
 
   fairshufflePrevious() {
     this.currentFairShuffleIndex = (this.currentFairShuffleIndex - 1 + this.currentPermutation.length) % this.currentPermutation.length;
-    this.currentSongNo = getSongIndex(this.currentPermutation[this.currentFairShuffleIndex]);
+    this.currentSongNo = this.getSongIndex(this.currentPermutation[this.currentFairShuffleIndex].artistTitle);
   }
 
   selectPreviousSong() {
