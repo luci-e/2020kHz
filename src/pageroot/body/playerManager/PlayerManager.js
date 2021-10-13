@@ -163,12 +163,16 @@ class PlayerManager extends HTMLDivElement {
           break;
       }
 
+      if (this.history.length == this.playlist.length){
+        this.clearHistory();
+      }
+
       let selectedSong = this.playlist[this.currentSongNo];
 
       if (this.excludeset.has(selectedSong))
         continue;
 
-      if (this.history.indexOf(this.currentSongNo) >= 0)
+      if (this.history.indexOf(selectedSong) >= 0)
         continue;
 
       this.playSong(selectedSong);
