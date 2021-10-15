@@ -122,6 +122,10 @@ class PlayerManager extends HTMLDivElement {
   }
 
   selectPreviousSong() {
+    if (this.history.length == this.playlist.length) {
+      this.clearHistory();
+    }
+
     while (true) {
       switch (this.currentPlayerMode) {
         case 0:
@@ -142,12 +146,19 @@ class PlayerManager extends HTMLDivElement {
       if (this.excludeset.has(selectedSong))
         continue;
 
+      if (this.history.indexOf(selectedSong) >= 0)
+        continue;
+
       this.playSong(selectedSong);
       break;
     }
   }
 
   selectNextSong() {
+    if (this.history.length == this.playlist.length) {
+      this.clearHistory();
+    }
+
     while (true) {
       switch (this.currentPlayerMode) {
         case 0:
@@ -161,10 +172,6 @@ class PlayerManager extends HTMLDivElement {
           break;
         default:
           break;
-      }
-
-      if (this.history.length == this.playlist.length){
-        this.clearHistory();
       }
 
       let selectedSong = this.playlist[this.currentSongNo];
@@ -284,13 +291,14 @@ class PlayerManager extends HTMLDivElement {
 
     if (duplicate >= 0) {
       this.history.splice(duplicate, 1);
+      if (remove) {
+        song.toggleListenHistory();
+      }
     } else {
       song.toggleListenHistory();
-    }
-
-    if (!remove) {
       this.history.push(song);
     }
+
 
     window.localStorage.setItem('listenHistory', JSON.stringify(this.history.map(s => s.artistTitle)));
 
@@ -338,7 +346,7 @@ class PlayerManager extends HTMLDivElement {
           src: this.player.playingSongImage.src,
           sizes: '256x256',
           type: 'image/*'
-        }, ]
+        },]
       });
     }
   }
@@ -442,7 +450,7 @@ class PlayerManager extends HTMLDivElement {
           let artistCompare = song1.songArtist.localeCompare(song2.songArtist);
 
           if (artistCompare == 0) {
-              return song1.songTitle.localeCompare(song2.songTitle);
+            return song1.songTitle.localeCompare(song2.songTitle);
           }
 
           return artistCompare;
@@ -453,7 +461,7 @@ class PlayerManager extends HTMLDivElement {
           let artistCompare = song1.songArtist.localeCompare(song2.songArtist);
 
           if (artistCompare == 0) {
-              return song1.songTitle.localeCompare(song2.songTitle);
+            return song1.songTitle.localeCompare(song2.songTitle);
           }
 
           return -1 * artistCompare;

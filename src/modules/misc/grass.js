@@ -118,7 +118,7 @@
     grass:      null,
     ambient:    1,
     stars:      null,
-    firefly_radius:  10,
+    firefly_radius:  1.5,
     num_fireflyes:  40,
     num_stars:    512,
     width:      0,
@@ -192,9 +192,10 @@
       // draw fireflyes
         ctx.fillStyle= '#ffff00';
         for(i=0; i<this.num_fireflyes*2; i+=2) {
+          ctx.beginPath();
           var angle= Math.PI*2*Math.sin(time*3E-4) + i*Math.PI/50;
-          var radius= this.firefly_radius*Math.cos(time*3E-4);
-          ctx.fillRect(
+          var radius= this.firefly_radius;
+          ctx.arc(
 
               this.stars[i] +
               Math.cos(time*3E-4) * Math.sin(time*0.00001*i) +  // move horizontally with time
@@ -205,8 +206,12 @@
               20*Math.sin(time*3E-4) * 5* Math.cos(time*0.00001*i)+  // move vertically with time
               radius*Math.sin(angle),
 
-                3,
-                3 );
+                radius,
+                0,
+                Math.PI *2,
+              false);
+
+            ctx.fill();
         }
 
 
