@@ -232,9 +232,9 @@ class PlayerManager extends HTMLDivElement {
         }
 
         let nextSong = this.playlist.find(matchSongTitle);
-        nextSong.score = songScore;
 
         if (nextSong) {
+          nextSong.score = songScore;
           this.currentPermutation.push(nextSong);
         } else {
           continue;
@@ -248,27 +248,34 @@ class PlayerManager extends HTMLDivElement {
 
   getProbabilitiesCallback(event) {
     let probFile = event.target.files[0];
-    Papa.parse(probFile, {
-      dynamicTyping: true,
-      skipEmptyLines: true,
-      complete: (results) => {
-        this.probabilities = results.data;
-        event.target.style.backgroundColor = 'lightgreen';
-        this.computeFairPermutation();
 
-        // for (let [title, _] of this.probabilities) {
-        //     let matchSongTitle = (song) => {
-        //         return song.songTitle == title;
-        //     }
-        //
-        //     let nextSongNo = this.playlist.findIndex(matchSongTitle);
-        //
-        //     if (nextSongNo == -1) {
-        //         console.warn(`Missing song: ${title}`)
-        //     }
-        // }
+    let waiter = setInterval(() => {
+
+      if (this.playlist != []) {
+        Papa.parse(probFile, {
+          dynamicTyping: true,
+          skipEmptyLines: true,
+          complete: (results) => {
+            this.probabilities = results.data;
+            event.target.style.backgroundColor = 'lightgreen';
+            this.computeFairPermutation();
+
+            // for (let [title, _] of this.probabilities) {
+            //     let matchSongTitle = (song) => {
+            //         return song.songTitle == title;
+            //     }
+            //
+            //     let nextSongNo = this.playlist.findIndex(matchSongTitle);
+            //
+            //     if (nextSongNo == -1) {
+            //         console.warn(`Missing song: ${title}`)
+            //     }
+            // }
+          }
+        });
+        clearInterval(waiter);
       }
-    });
+    }, 1000)
   }
 
   clearHistory() {
@@ -359,6 +366,8 @@ class PlayerManager extends HTMLDivElement {
     let currentChunk = 0;
     this.playlist = [];
 
+    this.tempPlaylist = [];
+
     do {
       let currentMax = currentChunk + 50;
       let audioFilesSlice = audioFiles.slice(currentChunk, currentMax);
@@ -387,7 +396,7 @@ class PlayerManager extends HTMLDivElement {
         }
       ));
 
-      this.playlist = this.playlist.concat(playlistSlice);
+      this.tempPlaylist = this.tempPlaylist.concat(playlistSlice);
 
       currentChunk += 50;
     } while (currentChunk < songsNo)
@@ -395,7 +404,8 @@ class PlayerManager extends HTMLDivElement {
     let excludedSongs = JSON.parse(window.localStorage.getItem('excludedSongs'));
     let listenedSongs = JSON.parse(window.localStorage.getItem('listenHistory'));
 
-    [this.playlist, this.excludeset, this.history] = this.songListContainer.addSongs(this.playlist, excludedSongs, listenedSongs);
+
+    [this.playlist, this.excludeset, this.history] = this.songListContainer.addSongs(this.tempPlaylist, excludedSongs, listenedSongs);
 
     this.historyIndex = Math.max(this.history.length - 1, 0);
 

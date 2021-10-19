@@ -119,6 +119,8 @@ body:fullscreen {
   perspective: 20cm;
   box-sizing: border-box;
   margin: 10px;
+  transition: width 1.5s, height 1.5s;
+:;
 }
 
 .rotate180 {
@@ -172,6 +174,7 @@ body:fullscreen {
   border-radius: 8px;
   backface-visibility: hidden;
   transform: translateZ(1px);
+  transition: width 1.5s, height 1.5s;
 }
 
 #songsPanel {
@@ -182,6 +185,7 @@ body:fullscreen {
   width: 350px;
   height: 500px;
   /* border-radius: 8px 0 0 8px; */
+  transition: width 1.5s, height 1.5s;
 }
 
 #songList {
