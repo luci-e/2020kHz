@@ -237,6 +237,7 @@ class PlayerManager extends HTMLDivElement {
           nextSong.score = songScore;
           this.currentPermutation.push(nextSong);
         } else {
+          console.log(songTitle);
           continue;
         }
 
