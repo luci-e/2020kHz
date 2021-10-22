@@ -21,12 +21,13 @@ let Grass = function() {
 Grass.prototype = {
 
 
-  alto_hierba: 0,    // grass height
+  grass_height: 0,    // grass height
   maxAngle: 0,    // maximum grass rotation angle (wind movement)
   angle: 0,    // construction angle. thus, every grass is different to others
   coords: null,  // quadric bezier curves coordinates
   color: null,  // grass color. modified by ambient component.
-  offset_control_point: 3,    // grass base width. greater values, wider at the basement.
+  offset_control_point: 4,    // grass base width. greater values, wider at the basement.
+  period: 5000,
 
   initialize: function(canvasWidth, canvasHeight, minHeight, maxHeight, angleMax, initialMaxAngle) {
 
@@ -38,7 +39,7 @@ Grass.prototype = {
     // try offset_control_x=10 for thicker grass.
     var offset_control_x = 1.5;
 
-    this.alto_hierba = minHeight + Math.random() * maxHeight;
+    this.grass_height = minHeight + Math.random() * maxHeight;
     this.maxAngle = 10 + Math.random() * angleMax;
     this.angle = Math.random() * initialMaxAngle * (Math.random() < 0.5 ? 1 : -1) * Math.PI / 180;
 
@@ -52,9 +53,9 @@ Grass.prototype = {
     //        var csy= sy-this.alto_hierba/2;-> original. good looking grass.
     var csy = 0;
     if (Math.random() < 0.1) {
-      csy = sy - this.alto_hierba;
+      csy = sy - this.grass_height;
     } else {
-      csy = sy - this.alto_hierba / 2;
+      csy = sy - this.grass_height / 2;
     }
 
     /**
@@ -88,19 +89,19 @@ Grass.prototype = {
    * @param ambient parameter to dim or brighten every grass.
    * @returns nothing
    */
-  paint: function(ctx, time, ambient) {
+  paint: function(ctx, timestamp, ambient) {
 
     ctx.save();
 
     // grass peak position. how much to rotate the peak.
     // less values (ie the .0005), will make as if there were a softer wind.
-    var inc_punta_hierba = Math.sin(time * 0.0005);
+    var inc_punta_hierba = 0.06* Math.sin(  timestamp / this.period );
 
     // rotate the point, so grass curves are modified accordingly. If just moved horizontally, the curbe would
     // end by being unstable with undesired visuals.
-    var ang = this.angle + Math.PI / 2 + inc_punta_hierba * Math.PI / 180 * (this.maxAngle * Math.cos(time * 0.0002));
-    var px = this.coords[0] + this.offset_control_point + this.alto_hierba * Math.cos(ang);
-    var py = this.coords[1] - this.alto_hierba * Math.sin(ang);
+    let angle = this.angle + Math.PI / 2 + inc_punta_hierba * this.maxAngle *  Math.cos( timestamp / this.period );
+    var px = this.coords[0] + this.offset_control_point + this.grass_height * Math.cos(angle);
+    var py = this.coords[1] - this.grass_height * Math.sin(angle);
 
     var c = this.coords;
 
@@ -159,6 +160,7 @@ Garden.prototype = {
   height: 0,
   updateMode: 'synced',
   sunTimes: null,
+  lastUpdateTime: 0,
 
   initialize: function(width, height, size) {
     this.width = width;
@@ -255,25 +257,33 @@ Garden.prototype = {
     ctx.restore();
   },
 
-  update: function(ctx, once = false) {
-    const syncedBackgroundUpdateDelay = 1000;
+  update: function(ctx, timestamp, once = false) {
 
-    ctx.fillStyle = gradient;
-    ctx.fillRect(0, 0, this.width, this.height);
-    var ntime = new Date().getTime();
-    var elapsed = ntime - time;
-    this.paint(ctx, elapsed);
+    if ( (timestamp - this.lastUpdateTime) > (1000 / 24)) {
+      this.lastUpdateTime = timestamp;
+      const syncedBackgroundUpdateDelay = 1000;
 
-    // lerp.
-    if (elapsed > nextLerpTime) {
-      lerpindex = Math.floor((elapsed - nextLerpTime) / nextLerpTime);
-      if ((elapsed - nextLerpTime) % nextLerpTime < lerpTime) {
-        this.lerp(ctx, (elapsed - nextLerpTime) % nextLerpTime, lerpTime);
+      ctx.fillStyle = gradient;
+      ctx.fillRect(0, 0, this.width, this.height);
+      var ntime = new Date().getTime();
+      var elapsed = ntime - time;
+      this.paint(ctx, elapsed);
+
+      // lerp.
+      if (elapsed > nextLerpTime) {
+        lerpindex = Math.floor((elapsed - nextLerpTime) / nextLerpTime);
+        if ((elapsed - nextLerpTime) % nextLerpTime < lerpTime) {
+          this.lerp(ctx, (elapsed - nextLerpTime) % nextLerpTime, lerpTime);
+        }
       }
-    }
 
-    if (!once) {
-      window.requestAnimationFrame(() => { let u = this.update.bind(this); u(ctx); });
+      if (!once) {
+        window.requestAnimationFrame((t) => { let u = this.update.bind(this); u(ctx, t); });
+      }
+    } else {
+      if (!once) {
+        window.requestAnimationFrame((t) => { let u = this.update.bind(this); u(ctx, t); });
+      }
     }
   },
 
@@ -331,7 +341,7 @@ function init() {
   garden.lerp(ctx, 0, 2000);
 
   time = new Date().getTime();
-  window.requestAnimationFrame(() => { let u = garden.update.bind(garden); u(ctx); });
+  window.requestAnimationFrame((t) => { let u = garden.update.bind(garden); u(ctx, t); });
 }
 
 
