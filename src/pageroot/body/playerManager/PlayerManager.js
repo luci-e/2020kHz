@@ -88,7 +88,7 @@ class PlayerManager extends HTMLDivElement {
   selectPreviousInHistorySong() {
     if (this.historyIndex > 0) {
       this.historyIndex -= 1;
-      this.currentSongNo = getSongIndex(this.history[this.historyIndex]);
+      this.currentSongNo = this.getSongIndex(this.history[this.historyIndex].artistTitle);
       this.playSong();
     } else {
       console.log('No history left');
@@ -290,6 +290,10 @@ class PlayerManager extends HTMLDivElement {
     window.localStorage.setItem('listenHistory', JSON.stringify([]));
   }
 
+  updateTitleText(){
+    document.getElementById('songPanelHeader').querySelector('span').innerText = `Sorrisi e canzoni ${this.history.length}/${this.playlist.length}`;
+  }
+
   addSongToHistory(song, remove = false) {
     if (this.history.length > 0 && this.historyIndex != this.history.length - 1) {
       this.history.splice(this.historyIndex, 1);
@@ -297,20 +301,30 @@ class PlayerManager extends HTMLDivElement {
 
     let duplicate = this.history.indexOf(song);
 
+    console.log(`Duplicate before: ${duplicate}`);
+    console.log(`Must remove : ${remove}`);
+
     if (duplicate >= 0) {
       this.history.splice(duplicate, 1);
       if (remove) {
         song.toggleListenHistory();
+      }else{
+        this.history.push(song);
       }
     } else {
       song.toggleListenHistory();
       this.history.push(song);
     }
 
-
     window.localStorage.setItem('listenHistory', JSON.stringify(this.history.map(s => s.artistTitle)));
+    this.updateTitleText();
 
     this.historyIndex = this.history.length - 1;
+
+    duplicate = this.history.indexOf(song);
+
+    console.log(`Duplicate after: ${duplicate}`);
+
   }
 
   songListenedCallback(event) {
@@ -411,6 +425,8 @@ class PlayerManager extends HTMLDivElement {
     this.historyIndex = Math.max(this.history.length - 1, 0);
 
     this.sortSongs('sortByArtistAscending');
+
+    this.updateTitleText();
 
     document.getElementById('uploadFilesButton').classList.replace('fileUploadInProgress', 'fileUploadComplete');
   }
