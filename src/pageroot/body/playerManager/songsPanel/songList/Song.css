@@ -19,7 +19,7 @@
 
 /* position: relative; */
 
-max-width: 80%;
+max-width: 75%;
 }
 
 .songButton {
@@ -27,7 +27,16 @@ max-width: 80%;
     width: 20px;
 }
 
-.included {
+
+.inQueue{
+  background-blend-mode: normal;
+  background-image: url(./enqueued.png);
+  background-repeat: no-repeat;
+  background-size: 80% 80%;
+  background-position: center;
+}
+
+.notQueued {
 }
 
 .excluded {

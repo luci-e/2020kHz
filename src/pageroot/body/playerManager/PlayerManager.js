@@ -15,6 +15,8 @@ class PlayerManager extends HTMLDivElement {
   historyIndex = 0;
   historySurfTimer;
 
+  customSongsQueue = new Array();
+
   rng = new LCG();
 
   get playerMode() {
@@ -46,6 +48,7 @@ class PlayerManager extends HTMLDivElement {
     this.addEventListener('songSelectedEvent', this.songSelectedCallback.bind(this));
     this.addEventListener('songExcludedEvent', this.songExcludedCallback.bind(this));
     this.addEventListener('songListenedEvent', this.songListenedCallback.bind(this));
+    this.addEventListener('songEnqueuedEvent', this.songEnqueuedCallback.bind(this));
 
     this.addEventListener('songEnded', (e) => {
       e.stopPropagation();
@@ -157,6 +160,15 @@ class PlayerManager extends HTMLDivElement {
   selectNextSong() {
     if (this.history.length == this.playlist.length) {
       this.clearHistory();
+    }
+
+    if( this.customSongsQueue.length > 0){
+      let selectedSong = this.customSongsQueue.shift();
+      this.currentSongNo = this.getSongIndex(selectedSong.songArtistTitle);
+
+      selectedSong.toggleEnqueued(false);
+      this.playSong(selectedSong);
+      return;
     }
 
     while (true) {
@@ -346,9 +358,21 @@ class PlayerManager extends HTMLDivElement {
 
     excludedSong.toggleExclude();
 
-    window.localStorage.setItem('excludedSongs', JSON.stringify(Array.from(this.excludeset).map(song => {
-      return `${song.songArtist} ${song.songTitle}`
-    })));
+    window.localStorage.setItem('excludedSongs', JSON.stringify(Array.from(this.excludeset).map(song => song.artistTitle)));
+  }
+
+  songEnqueuedCallback(event){
+    let enqueuedSong = event.detail.song;
+   
+
+    if(this.customSongsQueue.includes(enqueuedSong)){
+      this.customSongsQueue.splice( this.customSongsQueue.indexOf(enqueuedSong), 1);
+      enqueuedSong.toggleEnqueued(false);
+    }else{
+      this.customSongsQueue.push(enqueuedSong);
+      enqueuedSong.toggleEnqueued(true);
+    }
+
   }
 
   playSong(song = this.playlist[this.currentSongNo]) {
@@ -358,7 +382,8 @@ class PlayerManager extends HTMLDivElement {
 
     this.historySurfTimer = setTimeout(() => {
       this.addSongToHistory(song);
-    }, 1 * 1000);
+      console.log('fire');
+    }, 10 * 1000);
 
     if ('mediaSession' in navigator) {
       navigator.mediaSession.metadata = new MediaMetadata({

@@ -187,6 +187,7 @@ body:fullscreen {
   /* border-radius: 8px 0 0 8px; */
   transition: width 1.5s, height 1.5s;
   /* align-items: center; */
+  contain: strict;
 }
 
 #songPanelHeader{

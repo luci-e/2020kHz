@@ -52,6 +52,13 @@ class Song extends HTMLDivElement {
             song: this
           }
         }));
+      } else if (sourceElement.id == 'enqueueSongButton') {
+        this.dispatchEvent(new CustomEvent('songEnqueuedEvent', {
+          bubbles: true,
+          detail: {
+            song: this
+          }
+        }));
       } else {
         this.dispatchEvent(new CustomEvent('songSelectedEvent', {
           bubbles: true,
@@ -89,12 +96,47 @@ class Song extends HTMLDivElement {
     }
   }
 
-  toggleExclude() {
-    $(this.shadowRoot.getElementById('excludeSongButton')).toggleClass('included excluded');
+  toggleExclude(forceState = null) {
+    if (forceState ?? true) {
+      $(this.shadowRoot.getElementById('excludeSongButton')).toggleClass('included excluded');
+    } else {
+      if (forceState) {
+        $(this.shadowRoot.getElementById('excludeSongButton')).addClass('included');
+        $(this.shadowRoot.getElementById('excludeSongButton')).removeClass('excluded');
+      } else {
+        $(this.shadowRoot.getElementById('excludeSongButton')).addClass('excluded');
+        $(this.shadowRoot.getElementById('excludeSongButton')).removeClass('included');
+      }
+    }
   }
 
-  toggleListenHistory() {
-    $(this.shadowRoot.getElementById('listenHistoryButton')).toggleClass('toListen listened');
+  toggleListenHistory(forceState = null) {
+    if (forceState ?? true) {
+      $(this.shadowRoot.getElementById('listenHistoryButton')).toggleClass('toListen listened');
+    } else {
+      if (forceState) {
+        $(this.shadowRoot.getElementById('listenHistoryButton')).addClass('toListen');
+        $(this.shadowRoot.getElementById('listenHistoryButton')).removeClass('listened');
+      } else {
+        $(this.shadowRoot.getElementById('listenHistoryButton')).addClass('listened');
+        $(this.shadowRoot.getElementById('listenHistoryButton')).removeClass('toListen');
+      }
+    }
+  }
+
+
+  toggleEnqueued(forceState = null) {
+    if (forceState ?? true) {
+      $(this.shadowRoot.getElementById('enqueueSongButton')).toggleClass('inQueue notQueued');
+    } else {
+      if (forceState) {
+        $(this.shadowRoot.getElementById('enqueueSongButton')).addClass('inQueue');
+        $(this.shadowRoot.getElementById('enqueueSongButton')).removeClass('notQueued');
+      } else {
+        $(this.shadowRoot.getElementById('enqueueSongButton')).addClass('notQueued');
+        $(this.shadowRoot.getElementById('enqueueSongButton')).removeClass('inQueue');
+      }
+    }
   }
 }
 

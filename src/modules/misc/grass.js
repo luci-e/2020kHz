@@ -28,6 +28,8 @@ Grass.prototype = {
   color: null,  // grass color. modified by ambient component.
   offset_control_point: 4,    // grass base width. greater values, wider at the basement.
   period: 5000,
+  lastAmbient: -1,
+  fillStyle: '',
 
   initialize: function(canvasWidth, canvasHeight, minHeight, maxHeight, angleMax, initialMaxAngle) {
 
@@ -44,7 +46,7 @@ Grass.prototype = {
     this.angle = Math.random() * initialMaxAngle * (Math.random() < 0.5 ? 1 : -1) * Math.PI / 180;
 
     // hand crafted value. modify offset_control_x to play with grass curvature slope.
-    var csx = sx - offset_control_x;
+    var csx = Math.round(sx - offset_control_x);
 
     // grass curvature. greater values make grass bender.
     // try with:
@@ -53,9 +55,9 @@ Grass.prototype = {
     //        var csy= sy-this.alto_hierba/2;-> original. good looking grass.
     var csy = 0;
     if (Math.random() < 0.1) {
-      csy = sy - this.grass_height;
+      csy = Math.round(sy - this.grass_height);
     } else {
-      csy = sy - this.grass_height / 2;
+      csy = Math.round(sy - this.grass_height / 2);
     }
 
     /**
@@ -64,14 +66,14 @@ Grass.prototype = {
      You can play with psx/psy adding or removing values to slightly modify grass
      geometry.
     **/
-    var psx = csx;
+    var psx = Math.round(csx);
     // changed var psy= csy; to
-    var psy = csy - offset_control_x;
+    var psy = Math.round(csy - offset_control_x);
 
     // the bigger offset_control_point, the wider on its basement.
     this.offset_control_point = 3;
-    var dx = sx + this.offset_control_point;
-    var dy = sy;
+    var dx = Math.round(sx + this.offset_control_point);
+    var dy = Math.round(sy);
 
     this.coords = [sx, sy, csx, csy, psx, psy, dx, dy];
 
@@ -91,7 +93,10 @@ Grass.prototype = {
    */
   paint: function(ctx, timestamp, ambient) {
 
-    ctx.save();
+    if(this.lastAmbient != ambient){
+      this.lastAmbient = ambient;
+      this.fillStyle =`rgb( ${Math.round(this.color[0] * ambient)}, ${Math.round(this.color[1] * ambient)}, ${Math.round(this.color[2] * ambient)} )`;
+    } 
 
     // grass peak position. how much to rotate the peak.
     // less values (ie the .0005), will make as if there were a softer wind.
@@ -100,23 +105,20 @@ Grass.prototype = {
     // rotate the point, so grass curves are modified accordingly. If just moved horizontally, the curbe would
     // end by being unstable with undesired visuals.
     let angle = this.angle + Math.PI / 2 + inc_punta_hierba * this.maxAngle *  Math.cos( timestamp / this.period );
-    var px = this.coords[0] + this.offset_control_point + this.grass_height * Math.cos(angle);
-    var py = this.coords[1] - this.grass_height * Math.sin(angle);
+    var px = Math.round(this.coords[0] + this.offset_control_point + this.grass_height * Math.cos(angle));
+    var py = Math.round(this.coords[1] - this.grass_height * Math.sin(angle));
 
     var c = this.coords;
+
+
 
     ctx.beginPath();
     ctx.moveTo(c[0], c[1]);
     ctx.bezierCurveTo(c[0], c[1], c[2], c[3], px, py);
     ctx.bezierCurveTo(px, py, c[4], c[5], c[6], c[7]);
     ctx.closePath();
-    ctx.fillStyle = 'rgb(' +
-      Math.floor(this.color[0] * ambient) + ',' +
-      Math.floor(this.color[1] * ambient) + ',' +
-      Math.floor(this.color[2] * ambient) + ')';
+    ctx.fillStyle = this.fillStyle;
     ctx.fill();
-
-    ctx.restore();
 
   }
 };
@@ -187,10 +189,10 @@ Garden.prototype = {
   },
 
   paint: function(ctx, time) {
-    ctx.save();
-
     // draw stars if ambient below .3 -> night
     if (this.ambient < 0.3) {
+
+      ctx.save();
 
       // modify stars translucency by ambient (as transitioning to day, make them dissapear).
       ctx.globalAlpha = 1 - ((this.ambient - 0.05) / 0.25);
@@ -218,7 +220,7 @@ Garden.prototype = {
         this.stars[j] = (this.stars[j] + 0.1 * inc) % canvas.width;
 
         var y = this.stars[j + 1];
-        ctx.strokeRect(this.stars[j], this.stars[j + 1], 1, 1);
+        ctx.strokeRect( Math.round(this.stars[j]), Math.round(this.stars[j + 1]), 1, 1);
 
       }
 
@@ -233,14 +235,14 @@ Garden.prototype = {
         var radius = this.firefly_radius;
         ctx.arc(
 
-          this.stars[i] +
+          Math.round(this.stars[i] +
           Math.cos(time * 3E-4) * Math.sin(time * 0.00001 * i) +  // move horizontally with time
-          radius * Math.cos(angle),
+          radius * Math.cos(angle)),
 
-          this.height / 2 +
+          Math.round(this.height / 2 +
           0.5 * this.stars[i + 1] +
           20 * Math.sin(time * 3E-4) * 5 * Math.cos(time * 0.00001 * i) +  // move vertically with time
-          radius * Math.sin(angle),
+          radius * Math.sin(angle)),
 
           radius,
           0,
@@ -249,12 +251,13 @@ Garden.prototype = {
 
         ctx.fill();
       }
+
+      ctx.restore();
     }
 
     for (i = 0; i < this.grass.length; i++) {
       this.grass[i].paint(ctx, time, this.ambient);
     }
-    ctx.restore();
   },
 
   update: function(ctx, timestamp, once = false) {
@@ -332,8 +335,10 @@ Garden.prototype = {
 function init() {
   canvas = document.getElementById('s');
   let ctx = canvas.getContext('2d');
-  canvas.width = window.innerWidth;
-  canvas.height = window.innerHeight;
+  canvas.width = 800;
+  canvas.height = 600;
+
+  document.body.style.background = "url(" + canvas.toDataURL() + ")";
 
   garden = new Garden();
   garden.initialize(canvas.width, canvas.height, 300);
