@@ -90,9 +90,9 @@ class PlayerManager extends HTMLDivElement {
 
   selectPreviousInHistorySong() {
     if (this.historyIndex > 0) {
-      this.historyIndex -= 1;
       this.currentSongNo = this.getSongIndex(this.history[this.historyIndex].artistTitle);
       this.playSong();
+      this.historyIndex -= 1;
     } else {
       console.log('No history left');
     }
@@ -393,8 +393,9 @@ class PlayerManager extends HTMLDivElement {
           src: this.player.playingSongImage.src,
           sizes: '256x256',
           type: 'image/*'
-        },]
+        }]
       });
+      console.log(navigator.mediaSession.metadata);
     }
   }
 
