@@ -10,8 +10,8 @@
   <!-- Hic sunt preloads -->
 
   <link rel='preload' href='./style.css' as='style'>
-  <link rel='preload' href='./pageroot/body/playerManager/player/vynil.png' as='image'>
-  <link rel='preload' href='./pageroot/body/playerManager/player/Player.css' as='style'>
+  <link rel='preload' href='./pageroot/body/centralManager/playerManager/player/vynil.png' as='image'>
+  <link rel='preload' href='./pageroot/body/centralManager/playerManager/player/Player.css' as='style'>
 
   <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
 
@@ -22,7 +22,7 @@
   <!-- Hic sunt templates -->
 
   <template id="songTemplate">
-    <link rel='stylesheet' href='./pageroot/body/playerManager/songsPanel/songList/Song.css'>
+    <link rel='stylesheet' href='./pageroot/body/centralManager/playerManager/songsPanel/songList/Song.css'>
 
     <div part='header' class='header'>
       <slot name='songArtist' class='songArtist'></slot>
@@ -58,7 +58,7 @@
   </template>
 
   <template id="playerTemplate">
-    <link rel='stylesheet' href='./pageroot/body/playerManager/player/Player.css'>
+    <link rel='stylesheet' href='./pageroot/body/centralManager/playerManager/player/Player.css'>
 
     <slot part='playingSongImage' name='playingSongImage'></slot>
 
@@ -83,7 +83,7 @@
 
   <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
 
-  <script>
+  <!-- <script>
     if ('serviceWorker' in navigator) {
       console.log('Registering service worker');
       navigator.serviceWorker.register('./cache-worker.js').then(function() {
@@ -97,7 +97,7 @@
         console.error(error);
       });
     }
-  </script>
+  </script> -->
 
   <script src="https://code.jquery.com/jquery-3.6.0.slim.min.js" integrity="sha256-u7e5khyithlIdTpu22PHhENmPcRdFiHRjhAuHcs05RI=" crossorigin="anonymous" defer></script>
   <script src="./modules/misc/ID3.js" charset="utf-8" defer></script>
@@ -106,10 +106,10 @@
 
   <script src="./pageroot/body/misc.js" charset="utf-8"></script>
   <script src="./modules/misc/ScrollableList.js" charset="utf-8"></script>
-  <script src="./pageroot/body/playerManager/songsPanel/songList/SongListContainer.js" charset="utf-8"></script>
-  <script src="./pageroot/body/playerManager/songsPanel/songList/Song.js" charset="utf-8"></script>
-  <script src="./pageroot/body/playerManager/PlayerManager.js" charset="utf-8"></script>
-  <script src="./pageroot/body/playerManager/player/Player.js" charset="utf-8"></script>
+  <script src="./pageroot/body/centralManager/playerManager/songsPanel/songList/SongListContainer.js" charset="utf-8"></script>
+  <script src="./pageroot/body/centralManager/playerManager/songsPanel/songList/Song.js" charset="utf-8"></script>
+  <script src="./pageroot/body/centralManager/playerManager/PlayerManager.js" charset="utf-8"></script>
+  <script src="./pageroot/body/centralManager/playerManager/player/Player.js" charset="utf-8"></script>
   <script src="./modules/misc/suncalc-master/suncalc.js" charset="utf-8"></script>
   <!-- <script src="./modules/misc/grass.js" charset="utf-8"></script> -->
 
@@ -122,61 +122,64 @@
 
   <div id='centralContainer'>
 
-    <div id='settingsManager'>
-      <div id='indexPanel'>
+    <div id='centralManager'>
 
-        <div class='buttonsBar'>
-          <input type='button' class='controlButton' id='playerViewButton'>
-          <input type='button' class='controlButton' id='clearHistoryButton'>
-        </div>
-      </div>
-    </div>
+      <div id='settingsManager'>
+        <div id='indexPanel'>
 
-    <div id='playerManager' is='player-manager'>
-      <div id='songsPanel'>
-        <div id='songPanelHeader'><span></span></div>
-        <div id='songList' is="songlist-container">
-        </div>
-
-        <div id='sortingMenu' style='display:none'>
-          <div class='sortingOptions'>
-            <span>Sort by Artist</span>
-            <button class='sortingButton' name='sortByArtistAscending'>⬆️</button>
-            <button class='sortingButton' name='sortByArtistDescending'>⬇️</button>
+          <div class='buttonsBar'>
+            <input type='button' class='controlButton' id='playerViewButton'>
+            <input type='button' class='controlButton' id='clearHistoryButton'>
           </div>
-          <hr class='sortDivider'>
-
-          <div class='sortingOptions'>
-            <span>Sort by Title</span>
-            <button class='sortingButton' name='sortByTitleAscending'>⬆️</button>
-            <button class='sortingButton' name='sortByTitleDescending'>⬇️</button>
-          </div>
-          <hr class='sortDivider'>
-
-          <div class='sortingOptions'>
-            <span>Sort by Vote</span>
-            <button class='sortingButton' name='sortByVoteAscending'>⬆️</button>
-            <button class='sortingButton' name='sortByVoteDescending'>⬇️</button>
-          </div>
-        </div>
-
-        <div id='controlBar' class='buttonsBar'>
-          <input type='button' class='controlButton' id='settingsButton'>
-          <input type='file' class='controlButton fileUploadComplete' id='uploadFilesButton' accept='audio/*' multiple>
-          <input type='file' class='controlButton' id='uploadProbsButton' accept='.csv'>
-          <input type='button' class='controlButton sequential' id='modeSwitchButton'>
-          <input type='button' class='controlButton' id='sortButton'>
         </div>
       </div>
 
+      <div id='playerManager' is='player-manager'>
+        <div id='songsPanel'>
+          <div id='songPanelHeader'><span></span></div>
+          <div id='songList' is="songlist-container">
+          </div>
 
-      <div id='player' is='player-panel'>
-        <img id='playingSongImage' slot='playingSongImage'>
-        <span id='playingSongArtist' slot='playingSongArtist'>Artist</span>
-        <span id='playingSongTitle' slot='playingSongTitle'>Title</span>
-        <audio id='playingSong' preload="auto" controls slot='playingSong'></audio>
+          <div id='sortingMenu' style='display:none'>
+            <div class='sortingOptions'>
+              <span>Sort by Artist</span>
+              <button class='sortingButton' name='sortByArtistAscending'>⬆️</button>
+              <button class='sortingButton' name='sortByArtistDescending'>⬇️</button>
+            </div>
+            <hr class='sortDivider'>
+
+            <div class='sortingOptions'>
+              <span>Sort by Title</span>
+              <button class='sortingButton' name='sortByTitleAscending'>⬆️</button>
+              <button class='sortingButton' name='sortByTitleDescending'>⬇️</button>
+            </div>
+            <hr class='sortDivider'>
+
+            <div class='sortingOptions'>
+              <span>Sort by Vote</span>
+              <button class='sortingButton' name='sortByVoteAscending'>⬆️</button>
+              <button class='sortingButton' name='sortByVoteDescending'>⬇️</button>
+            </div>
+          </div>
+
+          <div id='controlBar' class='buttonsBar'>
+            <input type='button' class='controlButton' id='settingsButton'>
+            <input type='file' class='controlButton fileUploadComplete' id='uploadFilesButton' accept='audio/*' multiple>
+            <input type='file' class='controlButton' id='uploadProbsButton' accept='.csv'>
+            <input type='button' class='controlButton sequential' id='modeSwitchButton'>
+            <input type='button' class='controlButton' id='sortButton'>
+          </div>
+        </div>
+
+
+        <div id='player' is='player-panel'>
+          <img id='playingSongImage' slot='playingSongImage'>
+          <span id='playingSongArtist' slot='playingSongArtist'>Artist</span>
+          <span id='playingSongTitle' slot='playingSongTitle'>Title</span>
+          <audio id='playingSong' preload="auto" controls slot='playingSong'></audio>
+        </div>
+
       </div>
-
     </div>
   </div>
 

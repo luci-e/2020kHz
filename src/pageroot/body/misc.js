@@ -1,10 +1,10 @@
 window.addEventListener('load', ()=>{
     $('#settingsButton').click(()=>{
-        $('#centralContainer').toggleClass('rotate180');
+        $('#centralManager').toggleClass('rotate180');
     });
 
     $('#playerViewButton').click(()=>{
-        $('#centralContainer').toggleClass('rotate180');
+        $('#centralManager').toggleClass('rotate180');
     });
 
 })

@@ -114,17 +114,23 @@ body:fullscreen {
   /* position: absolute; */
   height: 500px;
   width: 800px;
+  transition: width 1.5s, height 1.5s;
+}
+
+.rotate180 {
+  transform: rotateY(180deg);
+}
+
+#centralManager{
+  /* position: absolute; */
+  height: 100%;
+  width: 100%;
   /* transition: transform .5s; */
   transform-style: preserve-3d;
   perspective: 20cm;
   box-sizing: border-box;
   margin: 10px;
   transition: width 1.5s, height 1.5s, transform .5s;
-:;
-}
-
-.rotate180 {
-  transform: rotateY(180deg);
 }
 
 #settingsManager {
@@ -154,11 +160,11 @@ body:fullscreen {
 }
 
 #playerViewButton {
-  background-image: url(./pageroot/body/settingsManager/indexPanel/controlBar/music-note.png);
+  background-image: url(./pageroot/body/centralManager/settingsManager/indexPanel/controlBar/music-note.png);
 }
 
 #clearHistoryButton {
-  background-image: url(./pageroot/body/settingsManager/indexPanel/controlBar/clearHistory.png);
+  background-image: url(./pageroot/body/centralManager/settingsManager/indexPanel/controlBar/clearHistory.png);
 }
 
 #playerManager {
@@ -187,7 +193,7 @@ body:fullscreen {
   /* border-radius: 8px 0 0 8px; */
   transition: width 1.5s, height 1.5s;
   /* align-items: center; */
-  contain: strict;
+  /* contain: strict; */
 }
 
 #songPanelHeader{
@@ -274,17 +280,17 @@ body:fullscreen {
 }
 
 #settingsButton {
-  background-image: url(./pageroot/body/playerManager/songsPanel/controlBar/setting-lines.png);
+  background-image: url(./pageroot/body/centralManager/playerManager/songsPanel/controlBar/setting-lines.png);
 }
 
 #uploadFilesButton {}
 
 .fileUploadComplete {
-  background-image: url(./pageroot/body/playerManager/songsPanel/controlBar/folder.png);
+  background-image: url(./pageroot/body/centralManager/playerManager/songsPanel/controlBar/folder.png);
 }
 
 .fileUploadInProgress {
-  background-image: url(./pageroot/body/playerManager/songsPanel/controlBar/loading.gif);
+  background-image: url(./pageroot/body/centralManager/playerManager/songsPanel/controlBar/loading.gif);
 }
 
 #uploadFilesButton::file-selector-button {
@@ -294,19 +300,19 @@ body:fullscreen {
 #modeSwitchButton {}
 
 .sequential {
-  background-image: url(./pageroot/body/playerManager/songsPanel/controlBar/arrow-right.png);
+  background-image: url(./pageroot/body/centralManager/playerManager/songsPanel/controlBar/arrow-right.png);
 }
 
 .shuffle {
-  background-image: url(./pageroot/body/playerManager/songsPanel/controlBar/shuffle.png);
+  background-image: url(./pageroot/body/centralManager/playerManager/songsPanel/controlBar/shuffle.png);
 }
 
 .fairshuffle {
-  background-image: url(./pageroot/body/playerManager/songsPanel/controlBar/dice.png);
+  background-image: url(./pageroot/body/centralManager/playerManager/songsPanel/controlBar/dice.png);
 }
 
 #uploadProbsButton {
-  background-image: url(./pageroot/body/playerManager/songsPanel/controlBar/curve.png);
+  background-image: url(./pageroot/body/centralManager/playerManager/songsPanel/controlBar/curve.png);
 }
 
 #uploadProbsButton::file-selector-button {
@@ -314,7 +320,7 @@ body:fullscreen {
 }
 
 #sortButton {
-  background-image: url(./pageroot/body/playerManager/songsPanel/controlBar/sort.png);
+  background-image: url(./pageroot/body/centralManager/playerManager/songsPanel/controlBar/sort.png);
 }
 
 #sortingMenu {
