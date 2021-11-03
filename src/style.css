@@ -114,6 +114,7 @@ body:fullscreen {
   /* position: absolute; */
   height: 500px;
   width: 800px;
+  margin: 10px;
   transition: width 1.5s, height 1.5s;
 }
 
@@ -129,7 +130,7 @@ body:fullscreen {
   transform-style: preserve-3d;
   perspective: 20cm;
   box-sizing: border-box;
-  margin: 10px;
+  /* margin: 10px; */
   transition: width 1.5s, height 1.5s, transform .5s;
 }
 
