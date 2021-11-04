@@ -102,6 +102,7 @@
   <script src="https://code.jquery.com/jquery-3.6.0.slim.min.js" integrity="sha256-u7e5khyithlIdTpu22PHhENmPcRdFiHRjhAuHcs05RI=" crossorigin="anonymous" defer></script>
   <script src="./modules/misc/ID3.js" charset="utf-8" defer></script>
   <script src="./modules/misc/PapaParse-5.0.2/papaparse.min.js" charset="utf-8" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/fuse.js/dist/fuse.js"></script>
 
 
   <script src="./pageroot/body/misc.js" charset="utf-8"></script>
@@ -136,7 +137,11 @@
 
       <div id='playerManager' is='player-manager'>
         <div id='songsPanel'>
-          <div id='songPanelHeader'><span></span></div>
+          <div id='songPanelHeader'>
+            <span class='headerExpanded' id='headerText'></span>
+            <input type='text' class = 'headerCompressed' id='searchBar'>
+            <input type='button' class='controlButton smallButton' id='searchButton'>
+          </div>
           <div id='songList' is="songlist-container">
           </div>
 

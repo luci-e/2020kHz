@@ -17,6 +17,8 @@ class PlayerManager extends HTMLDivElement {
 
   customSongsQueue = new Array();
 
+  fuse = null;
+
   rng = new LCG();
 
   get playerMode() {
@@ -40,6 +42,8 @@ class PlayerManager extends HTMLDivElement {
 
       // TODO OH GOD REMOVE
       $('#clearHistoryButton').click(this.clearHistory.bind(this));
+
+      document.getElementById('searchBar').addEventListener('change', this.searchSongs.bind(this));
 
       this.songListContainer = document.getElementById('songList');
       this.player = document.getElementById('player');
@@ -162,7 +166,7 @@ class PlayerManager extends HTMLDivElement {
       this.clearHistory();
     }
 
-    if( this.customSongsQueue.length > 0){
+    if (this.customSongsQueue.length > 0) {
       let selectedSong = this.customSongsQueue.shift();
       this.currentSongNo = this.getSongIndex(selectedSong.songArtistTitle);
 
@@ -302,7 +306,7 @@ class PlayerManager extends HTMLDivElement {
     window.localStorage.setItem('listenHistory', JSON.stringify([]));
   }
 
-  updateTitleText(){
+  updateTitleText() {
     document.getElementById('songPanelHeader').querySelector('span').innerText = `Sorrisi e canzoni ${this.history.length}/${this.playlist.length}`;
   }
 
@@ -320,7 +324,7 @@ class PlayerManager extends HTMLDivElement {
       this.history.splice(duplicate, 1);
       if (remove) {
         song.toggleListenHistory();
-      }else{
+      } else {
         this.history.push(song);
       }
     } else {
@@ -361,14 +365,14 @@ class PlayerManager extends HTMLDivElement {
     window.localStorage.setItem('excludedSongs', JSON.stringify(Array.from(this.excludeset).map(song => song.artistTitle)));
   }
 
-  songEnqueuedCallback(event){
+  songEnqueuedCallback(event) {
     let enqueuedSong = event.detail.song;
-   
 
-    if(this.customSongsQueue.includes(enqueuedSong)){
-      this.customSongsQueue.splice( this.customSongsQueue.indexOf(enqueuedSong), 1);
+
+    if (this.customSongsQueue.includes(enqueuedSong)) {
+      this.customSongsQueue.splice(this.customSongsQueue.indexOf(enqueuedSong), 1);
       enqueuedSong.toggleEnqueued(false);
-    }else{
+    } else {
       this.customSongsQueue.push(enqueuedSong);
       enqueuedSong.toggleEnqueued(true);
     }
@@ -453,6 +457,8 @@ class PlayerManager extends HTMLDivElement {
     this.sortSongs('sortByArtistAscending');
 
     this.updateTitleText();
+
+    this.fuse = new Fuse(this.playlist, { keys: ['artistTitle'] })
 
     document.getElementById('uploadFilesButton').classList.replace('fileUploadInProgress', 'fileUploadComplete');
   }
@@ -550,7 +556,7 @@ class PlayerManager extends HTMLDivElement {
 
     if (sortingFunction) {
       sortChildren(this.songListContainer, '[is="song-item"]', sortingFunction);
-      this.playlist = [...(this.songListContainer.querySelectorAll('[is="song-item"]'))];
+      //this.playlist = [...(this.songListContainer.querySelectorAll('[is="song-item"]'))];
     }
 
   }
@@ -562,6 +568,25 @@ class PlayerManager extends HTMLDivElement {
     this.sortSongs(optionName);
   }
 
+  searchSongs(event) {
+    let text = event.target.value;
+    let docFragment = document.createDocumentFragment();
+
+    let searchResult = null;
+
+    if (text != '') {
+      searchResult = this.fuse.search(text);
+      searchResult.forEach(item => docFragment.appendChild(item.item));
+    } else {
+      this.playlist.forEach(item => docFragment.appendChild(item));
+    }
+
+    while (this.songListContainer.lastElementChild) {
+      this.songListContainer.removeChild(this.songListContainer.lastElementChild);
+    }
+
+    this.songListContainer.appendChild(docFragment);
+  }
 }
 
 customElements.define("player-manager", PlayerManager, {
