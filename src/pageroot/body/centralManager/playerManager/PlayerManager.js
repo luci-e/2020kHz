@@ -17,6 +17,7 @@ class PlayerManager extends HTMLDivElement {
 
   customSongsQueue = new Array();
 
+  currentSorting = 'sortByArtistAscending';
   fuse = null;
 
   rng = new LCG();
@@ -458,7 +459,7 @@ class PlayerManager extends HTMLDivElement {
 
     this.updateTitleText();
 
-    this.fuse = new Fuse(this.playlist, { keys: ['artistTitle'] })
+    this.fuse = new Fuse(this.playlist, { keys: ['songTitle', 'songArtist'] })
 
     document.getElementById('uploadFilesButton').classList.replace('fileUploadInProgress', 'fileUploadComplete');
   }
@@ -483,24 +484,7 @@ class PlayerManager extends HTMLDivElement {
     });
   }
 
-  sortSongs(optionName) {
-    const sortChildren = (
-      container,
-      childSelector,
-      sortingFunction
-    ) => {
-      const items = [...(container.querySelectorAll(childSelector))];
-
-      let docFragment = document.createDocumentFragment();
-
-      items
-        .sort(sortingFunction)
-        .forEach(item => docFragment.appendChild(item));
-
-      container.appendChild(docFragment);
-    };
-
-
+  getSortingFunction(optionName) {
     let sortingFunction = null;
 
     switch (optionName) {
@@ -555,10 +539,34 @@ class PlayerManager extends HTMLDivElement {
     }
 
     if (sortingFunction) {
-      sortChildren(this.songListContainer, '[is="song-item"]', sortingFunction);
-      //this.playlist = [...(this.songListContainer.querySelectorAll('[is="song-item"]'))];
+      this.currentSorting = optionName;
+      return sortingFunction;
     }
+  }
 
+  sortSongs(optionName) {
+    const sortChildren = (
+      container,
+      childSelector,
+      sortingFunction
+    ) => {
+      const items = [...(container.querySelectorAll(childSelector))];
+
+      let docFragment = document.createDocumentFragment();
+
+      items
+        .sort(sortingFunction)
+        .forEach(item => docFragment.appendChild(item));
+
+      container.appendChild(docFragment);
+    };
+
+
+    let sortingFunction = this.getSortingFunction(optionName);
+
+    if (sortingFunction) {
+      sortChildren(this.songListContainer, '[is="song-item"]', sortingFunction);
+    }
   }
 
   sortSongsCallback(sortingOption) {
@@ -570,20 +578,33 @@ class PlayerManager extends HTMLDivElement {
 
   searchSongs(event) {
     let text = event.target.value;
-    let docFragment = document.createDocumentFragment();
-
-    let searchResult = null;
+    let searchResult = [];
 
     if (text != '') {
-      searchResult = this.fuse.search(text);
-      searchResult.forEach(item => docFragment.appendChild(item.item));
+      this.fuse.search(text).forEach(item => searchResult.push(item.item));
     } else {
-      this.playlist.forEach(item => docFragment.appendChild(item));
+      searchResult = this.playlist;
+
     }
 
     while (this.songListContainer.lastElementChild) {
       this.songListContainer.removeChild(this.songListContainer.lastElementChild);
     }
+
+    let docFragment = document.createDocumentFragment();
+
+    if (text != '') {
+      searchResult.forEach(item => docFragment.appendChild(item));
+
+    } else {
+      let sortingFunction = this.getSortingFunction(this.currentSorting)
+
+      searchResult
+        .sort(sortingFunction)
+        .forEach(item => docFragment.appendChild(item));
+    }
+
+
 
     this.songListContainer.appendChild(docFragment);
   }
