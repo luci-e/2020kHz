@@ -4,21 +4,24 @@
 
 [data-user-theme='true'] {
   --color-control-buttons: lavender;
+  --color-control-button-selected: skyblue;
   --color-bg-top: skyblue;
   --color-bg-bottom: wheat;
   --color-player: #fff0f57f;
-  --color-user-manager: red;
+  --color-user-manager: #fff0f57f;
   --color-song: #ececec;
   --color-song-artist: lavender;
   --color-scrollbar-track: aliceblue;
   --color-scrollbar-thumb: darkgray;
   --color-sorting-menu: floralwhite;
+  --color-text : black;
   color: black;
 }
 
 @media (prefers-color-scheme: light) {
   [data-user-theme='false'] {
     --color-control-buttons: lavender;
+    --color-control-button-selected: lavender;
     --color-bg-top: skyblue;
     --color-bg-bottom: wheat;
     --color-player: #fff0f57f;
@@ -28,6 +31,7 @@
     --color-scrollbar-track: aliceblue;
     --color-scrollbar-thumb: darkgray;
     --color-sorting-menu: floralwhite;
+    --color-text : black;
     color: black;
   }
 }
@@ -35,6 +39,7 @@
 @media (prefers-color-scheme: dark) {
   [data-user-theme='false'] {
     --color-control-buttons: darkgrey;
+    --color-control-button-selected: lavender;
     --color-bg-top: midnightblue;
     --color-bg-bottom: rebeccapurple;
     --color-player: #a9a9a9bf;
@@ -44,6 +49,7 @@
     --color-scrollbar-track: darkgray;
     --color-scrollbar-thumb: dimgray;
     --color-sorting-menu: indigo;
+    --color-text : #ebebeb;
     color: #ebebeb;
   }
 }
@@ -243,6 +249,7 @@ body:fullscreen {
   /* z-index: 9999; */
   transition: width 1s;
   /* margin-right: -32%; */
+  color: var(--color-text);
 }
 
 .headerCompressed {

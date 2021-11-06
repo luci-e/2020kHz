@@ -275,7 +275,7 @@ class PlayerManager extends HTMLDivElement {
           skipEmptyLines: true,
           complete: (results) => {
             this.probabilities = results.data;
-            event.target.style.backgroundColor = 'lightgreen';
+            event.target.style.backgroundColor = 'var(--color-control-button-selected)';
             this.computeFairPermutation();
 
             // for (let [title, _] of this.probabilities) {

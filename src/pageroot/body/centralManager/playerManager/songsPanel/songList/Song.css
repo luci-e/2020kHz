@@ -1,59 +1,72 @@
 :host {
-    width: 95%;
-    margin: 3px auto 3px auto;
-    border-radius: 4px;
-    cursor: pointer;
-    box-sizing: border-box;
-    background-color: var(--color-song);
+  width: 95%;
+  margin: 3px auto 3px auto;
+  border-radius: 4px;
+  cursor: pointer;
+  box-sizing: border-box;
+  background-color: var(--color-song);
 }
 
 .header {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-    align-content: center;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  align-content: center;
 }
 
-.songArtist::slotted(*){
-
-/* position: relative; */
-
-max-width: 75%;
+.songArtist::slotted(*) {
+  /* position: relative; */
+  max-width: 75%;
 }
 
 .songButton {
-    height: 20px;
-    width: 20px;
+  height: 20px;
+  width: 20px;
+  border: none;
+  border-radius: 5px;
+  background-size: 70% 70%;
+  background-color: var(--color-control-buttons);
+  background-repeat: no-repeat;
+  background-position: center;
+  background-blend-mode: normal;
+  cursor: pointer;
+  box-shadow: -1px 1px rgb(10 10 10 / 100%);
+  transition: box-shadow .5s;
 }
 
+.smallButton {
+  height: 30px;
+  width: 30px;
+}
 
-.inQueue{
-  background-blend-mode: normal;
-  background-image: url(./enqueued.png);
-  background-repeat: no-repeat;
-  background-size: 80% 80%;
-  background-position: center;
+.songButton:hover {
+  box-shadow: -2px 2px rgb(10 10 10 / 50%);
 }
 
 .notQueued {
+  background-image: url(./enqueued.png);
+}
+
+.inQueue {
+  background-image: url(./enqueued.png);
+  background-color: var(--color-control-button-selected);
+}
+
+.included {
+  background-image: url(./cross.png);
 }
 
 .excluded {
-    background-blend-mode: normal;
-    background-image: url(./cross.png);
-    background-repeat: no-repeat;
-    background-size: 80% 80%;
-    background-position: center;
+  background-image: url(./cross.png);
+  background-color: var(--color-control-button-selected);
 }
 
-.toListen{
+.toListen {
+  background-image: url(./history.png);
 }
 
-.listened{
-    background-blend-mode: normal;
-    background-image: url(./history.png);
-    background-repeat: no-repeat;
-    background-size: 80% 80%;
-    background-position: center;
+.listened {
+  background-image: url(./history.png);
+  background-color: var(--color-control-button-selected);
 }
