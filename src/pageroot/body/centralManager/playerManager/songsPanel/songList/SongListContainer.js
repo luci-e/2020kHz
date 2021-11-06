@@ -7,7 +7,7 @@ class SongListContainer extends ScrollableList {
         super.connectedCallback();
     }
 
-    addSongs(playlist, excludelist = null, listenedlist = null) {
+    async addSongs(playlist, excludelist = null, listenedlist = null) {
         let songList = [];
         let history = [];
         let excludeSet = new Set();

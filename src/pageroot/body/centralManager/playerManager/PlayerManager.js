@@ -451,7 +451,7 @@ class PlayerManager extends HTMLDivElement {
     let listenedSongs = JSON.parse(window.localStorage.getItem('listenHistory'));
 
 
-    [this.playlist, this.excludeset, this.history] = this.songListContainer.addSongs(this.tempPlaylist, excludedSongs, listenedSongs);
+    [this.playlist, this.excludeset, this.history] = await this.songListContainer.addSongs(this.tempPlaylist, excludedSongs, listenedSongs);
 
     this.historyIndex = Math.max(this.history.length - 1, 0);
 
@@ -459,9 +459,13 @@ class PlayerManager extends HTMLDivElement {
 
     this.updateTitleText();
 
-    this.fuse = new Fuse(this.playlist, { keys: ['songTitle', 'songArtist'] })
+    this.updateSearch();
 
     document.getElementById('uploadFilesButton').classList.replace('fileUploadInProgress', 'fileUploadComplete');
+  }
+
+  updateSearch() {
+    this.fuse = new Fuse(this.playlist, { keys: ['songTitle', 'songArtist'] })
   }
 
   toggleSortingMenu(pressEvent) {
@@ -566,6 +570,7 @@ class PlayerManager extends HTMLDivElement {
 
     if (sortingFunction) {
       sortChildren(this.songListContainer, '[is="song-item"]', sortingFunction);
+      this.updateSearch();
     }
   }
 
@@ -584,7 +589,6 @@ class PlayerManager extends HTMLDivElement {
       this.fuse.search(text).forEach(item => searchResult.push(item.item));
     } else {
       searchResult = this.playlist;
-
     }
 
     while (this.songListContainer.lastElementChild) {
@@ -595,16 +599,15 @@ class PlayerManager extends HTMLDivElement {
 
     if (text != '') {
       searchResult.forEach(item => docFragment.appendChild(item));
-
     } else {
       let sortingFunction = this.getSortingFunction(this.currentSorting)
 
       searchResult
         .sort(sortingFunction)
         .forEach(item => docFragment.appendChild(item));
+
+      this.updateSearch();
     }
-
-
 
     this.songListContainer.appendChild(docFragment);
   }

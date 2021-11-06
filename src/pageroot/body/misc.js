@@ -10,6 +10,7 @@ window.addEventListener('load', () => {
   $('#searchButton').click(() => {
     $('#searchBar').toggleClass('headerExpanded headerCompressed');
     $('#headerText').toggleClass('headerExpanded headerCompressed');
+    $('#searchBar').focus();
   });
 
   $('#searchButton').change(() => {
