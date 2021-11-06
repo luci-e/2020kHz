@@ -540,6 +540,16 @@ class PlayerManager extends HTMLDivElement {
           };
         }
         break;
+      case 'sortByListenedAscending':
+        sortingFunction = (song1, song2) => {
+          return (this.history.includes(song1) <= this.history.includes(song2))?-1:1;
+        };
+        break;
+      case 'sortByListenedDescending':
+        sortingFunction = (song1, song2) => {
+          return -1 * (this.history.includes(song1) <= this.history.includes(song2))?1:-1;
+        };
+        break;
     }
 
     if (sortingFunction) {

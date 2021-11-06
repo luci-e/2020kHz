@@ -383,8 +383,8 @@ body:fullscreen {
 #sortingMenu {
   position: fixed;
   /* visibility: hidden; */
-  height: 98px;
-  width: 191px;
+  height: 127px;
+  width: 196px;
   box-sizing: border-box;
   /* border: 1px solid; */
   border-radius: 10px;
@@ -402,7 +402,7 @@ body:fullscreen {
   height: 25px;
   width: 90%;
   text-align: justify;
-  text-align-last: justify;
+  /* text-align-last: justify; */
   font-variant: petite-caps;
   font-family: system-ui;
   cursor: pointer;
@@ -419,6 +419,8 @@ body:fullscreen {
   line-height: 1;
   padding: 0;
   text-align: center;
+  float: right;
+  margin-left: 5px;
 }
 
 .sortDivider {
