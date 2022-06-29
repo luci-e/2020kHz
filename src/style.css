@@ -91,6 +91,7 @@ body {
   background: linear-gradient(180deg, var(--color-bg-top), var(--color-bg-bottom));
   align-items: center;
   box-sizing: border-box;
+  overscroll-behavior-y:  contain;
 }
 
 body:fullscreen {
