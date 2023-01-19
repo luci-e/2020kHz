@@ -37,7 +37,7 @@ class Song extends HTMLDivElement {
 
     this.addEventListener('click', (event) => {
       event.stopPropagation();
-      let sourceElement = event.srcElement.shadowRoot.activeElement.id ?? 'none';
+      let sourceElement = event.srcElement?.shadowRoot?.activeElement?.id || 'none';
       if (sourceElement == 'excludeSongButton') {
         this.dispatchEvent(new CustomEvent('songExcludedEvent', {
           bubbles: true,
