@@ -37,22 +37,22 @@ class Song extends HTMLDivElement {
 
     this.addEventListener('click', (event) => {
       event.stopPropagation();
-      let sourceElement = event.path[0];
-      if (sourceElement.id == 'excludeSongButton') {
+      let sourceElement = event.srcElement.shadowRoot.activeElement.id ?? 'none';
+      if (sourceElement == 'excludeSongButton') {
         this.dispatchEvent(new CustomEvent('songExcludedEvent', {
           bubbles: true,
           detail: {
             song: this
           }
         }));
-      } else if (sourceElement.id == 'listenHistoryButton') {
+      } else if (sourceElement == 'listenHistoryButton') {
         this.dispatchEvent(new CustomEvent('songListenedEvent', {
           bubbles: true,
           detail: {
             song: this
           }
         }));
-      } else if (sourceElement.id == 'enqueueSongButton') {
+      } else if (sourceElement == 'enqueueSongButton') {
         this.dispatchEvent(new CustomEvent('songEnqueuedEvent', {
           bubbles: true,
           detail: {
