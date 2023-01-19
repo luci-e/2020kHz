@@ -1,10 +1,13 @@
-class SongListContainer extends ScrollableList {
+class SongListContainer extends HTMLDivElement {
+    songListTemplate = window.document.getElementById('songListTemplate');
+
     constructor() {
         super();
     }
 
     connectedCallback() {
-        super.connectedCallback();
+        this.attachShadow({ mode: 'open' });
+        this.shadowRoot.append(this.songListTemplate.content.cloneNode(true));
     }
 
     async addSongs(playlist, excludelist = null, listenedlist = null) {
