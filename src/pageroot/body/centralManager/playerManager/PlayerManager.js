@@ -409,43 +409,31 @@ class PlayerManager extends HTMLDivElement {
 
     let audioFiles = Array.from(event.target.files).filter(file => file.type.startsWith('audio'));
     let songsNo = audioFiles.length;
-    let currentChunk = 0;
     this.playlist = [];
+    
+    this.playlist = await Promise.all(audioFiles.map(
+      async (audio) => {
+        let header = audio.slice(0, 10);
 
-    this.tempPlaylist = [];
+        return header.arrayBuffer().then((buf) => {
+          let size = new DataView(buf).getUint32(6);
+          return audio.slice(0, size + 10).arrayBuffer();
+        }).then((tagBuf) => {
+          let tag = ID3.Parse(tagBuf, false, 2);
+          let framesDict = {};
 
-    do {
-      let currentMax = currentChunk + 50;
-      let audioFilesSlice = audioFiles.slice(currentChunk, currentMax);
-
-      let playlistSlice = await Promise.all(audioFilesSlice.map(
-        async (audio) => {
-          let header = audio.slice(0, 10);
-
-          return header.arrayBuffer().then((buf) => {
-            let size = new DataView(buf).getUint32(6);
-            return audio.slice(0, size + 10).arrayBuffer();
-          }).then((tagBuf) => {
-            let tag = ID3.Parse(tagBuf, false, 2);
-            let framesDict = {};
-
-            tag.Frames.forEach((frame, _) => {
-              framesDict[frame.ID] = frame;
-            });
-
-            tag.Frames = framesDict;
-            return {
-              file: audio,
-              tag: tag
-            };
+          tag.Frames.forEach((frame, _) => {
+            framesDict[frame.ID] = frame;
           });
-        }
-      ));
 
-      this.tempPlaylist = this.tempPlaylist.concat(playlistSlice);
-
-      currentChunk += 50;
-    } while (currentChunk < songsNo)
+          tag.Frames = framesDict;
+          return {
+            file: audio,
+            tag: tag
+          };
+        });
+      }
+    ));
 
     let excludedSongs = JSON.parse(window.localStorage.getItem('excludedSongs'));
     let listenedSongs = JSON.parse(window.localStorage.getItem('listenHistory'));
