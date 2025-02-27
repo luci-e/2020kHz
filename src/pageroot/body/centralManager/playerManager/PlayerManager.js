@@ -411,7 +411,7 @@ class PlayerManager extends HTMLDivElement {
     let songsNo = audioFiles.length;
     this.playlist = [];
     
-    this.playlist = await Promise.all(audioFiles.map(
+    this.tempPlaylist = await Promise.all(audioFiles.map(
       async (audio) => {
         let header = audio.slice(0, 10);
 
